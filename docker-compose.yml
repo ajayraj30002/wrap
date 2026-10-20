@@ -1,0 +1,61 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: wrap
+      POSTGRES_PASSWORD: wrap
+      POSTGRES_DB: wrap
+    ports:
+      - "5433:5432"
+    volumes:
+      - wrap_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wrap -d wrap"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - wrap_net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://wrap:wrap@postgres:5432/wrap
+      - WRAP_MASTER_KEY=${WRAP_MASTER_KEY:-dev_master_key_replace_with_32_chars}
+      - WRAP_API_KEYS=${WRAP_API_KEYS:-wrap_dev_api_key}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - CORS_ORIGINS=["http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - wrap_net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - wrap_net
+
+volumes:
+  wrap_postgres:
+
+networks:
+  wrap_net:
+    driver: bridge

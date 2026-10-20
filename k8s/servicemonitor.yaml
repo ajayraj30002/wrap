@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: wrap-backend-monitor
+  namespace: wrap
+  labels:
+    app.kubernetes.io/name: wrap-backend
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wrap-backend
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s

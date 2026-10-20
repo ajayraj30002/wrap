@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wrap
+  labels:
+    app.kubernetes.io/name: wrap
+    app.kubernetes.io/part-of: wrap-ai-gateway

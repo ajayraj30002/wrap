@@ -1,0 +1,40 @@
+"""Analytics enumerations and event types."""
+
+from enum import Enum
+
+
+class WorkflowEventType(str, Enum):
+    # Workflow lifecycle
+    WORKFLOW_CREATED = "WORKFLOW_CREATED"
+    WORKFLOW_STARTED = "WORKFLOW_STARTED"
+    WORKFLOW_COMPLETED = "WORKFLOW_COMPLETED"
+    WORKFLOW_FAILED = "WORKFLOW_FAILED"
+    WORKFLOW_CANCELLED = "WORKFLOW_CANCELLED"
+
+    # Task lifecycle
+    TASK_READY = "TASK_READY"
+    TASK_STARTED = "TASK_STARTED"
+    TASK_RETRYING = "TASK_RETRYING"
+    TASK_SUCCEEDED = "TASK_SUCCEEDED"
+    TASK_FAILED = "TASK_FAILED"
+    TASK_CANCELLED = "TASK_CANCELLED"
+
+
+class WorkflowStatus(str, Enum):
+    PENDING = "PENDING"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+
+
+class TaskStatus(str, Enum):
+    PENDING = "PENDING"
+    READY = "READY"
+    RUNNING = "RUNNING"
+    RETRYING = "RETRYING"
+    SUCCEEDED = "SUCCEEDED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+    SKIPPED = "SKIPPED"

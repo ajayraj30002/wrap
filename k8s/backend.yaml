@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wrap-backend
+  namespace: wrap
+  labels:
+    app.kubernetes.io/name: wrap-backend
+    app.kubernetes.io/part-of: wrap-ai-gateway
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: wrap-backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wrap-backend
+  namespace: wrap
+  labels:
+    app.kubernetes.io/name: wrap-backend
+    app.kubernetes.io/part-of: wrap-ai-gateway
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wrap-backend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: wrap-backend
+    spec:
+      containers:
+        - name: backend
+          image: wrap-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: wrap-config
+            - secretRef:
+                name: wrap-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
