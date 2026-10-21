@@ -531,21 +531,40 @@ async def metrics_overview(
     models_data: list[dict] | None = None,
 ) -> dict:
     cutoff = get_time_range_cutoff(range)
-    stmt = select(
-        func.count(RequestMetric.id).label("total"),
-        func.sum(case((RequestMetric.status == "success", 1), else_=0)).label("successes"),
-        func.avg(RequestMetric.total_latency_ms).label("latency"),
-        func.percentile_cont(0.95).within_group(RequestMetric.total_latency_ms).label("p95"),
-        func.avg(RequestMetric.ttft_ms).label("avg_ttft"),
-    )
-    if cutoff:
-        stmt = stmt.where(RequestMetric.created_at >= cutoff)
-    metric_row = (await session.execute(stmt)).one()
+    try:
+        stmt = select(
+            func.count(RequestMetric.id).label("total"),
+            func.sum(case((RequestMetric.status == "success", 1), else_=0)).label("successes"),
+            func.avg(RequestMetric.total_latency_ms).label("latency"),
+            func.percentile_cont(0.95).within_group(RequestMetric.total_latency_ms).label("p95"),
+            func.avg(RequestMetric.ttft_ms).label("avg_ttft"),
+        )
+        if cutoff:
+            stmt = stmt.where(RequestMetric.created_at >= cutoff)
+        metric_row = (await session.execute(stmt)).one()
+        p95 = metric_row.p95
+    except Exception:
+        stmt_fallback = select(
+            func.count(RequestMetric.id).label("total"),
+            func.sum(case((RequestMetric.status == "success", 1), else_=0)).label("successes"),
+            func.avg(RequestMetric.total_latency_ms).label("latency"),
+            func.avg(RequestMetric.ttft_ms).label("avg_ttft"),
+        )
+        if cutoff:
+            stmt_fallback = stmt_fallback.where(RequestMetric.created_at >= cutoff)
+        metric_row = (await session.execute(stmt_fallback)).one()
+        p95_stmt = select(RequestMetric.total_latency_ms).where(RequestMetric.status == "success")
+        if cutoff:
+            p95_stmt = p95_stmt.where(RequestMetric.created_at >= cutoff)
+        p95_stmt = p95_stmt.order_by(RequestMetric.total_latency_ms)
+        lats = (await session.execute(p95_stmt)).scalars().all()
+        p95 = lats[int(len(lats) * 0.95)] if lats else None
+
     total = metric_row.total or 0
     successes = metric_row.successes or 0
     errors = total - successes
     latency = metric_row.latency or 0
-    p95 = metric_row.p95 if total else None
+    p95 = p95 if total else None
     avg_ttft = metric_row.avg_ttft
 
     if total == 0:
@@ -1208,20 +1227,38 @@ async def metrics_timeseries(
     success_case = case((RequestMetric.status == "success", 1), else_=0)
     error_case = case((RequestMetric.status != "success", 1), else_=0)
 
-    time_bucket = func.date_trunc(bucket, RequestMetric.created_at).label("time_bucket")
-    stmt = select(
-        time_bucket,
-        func.count(RequestMetric.id).label("requests"),
-        func.sum(success_case).label("successes"),
-        func.sum(error_case).label("errors"),
-        func.avg(RequestMetric.total_latency_ms).label("avg_latency"),
-        func.coalesce(func.sum(RequestMetric.total_tokens), 0).label("tokens"),
-    )
-    if cutoff:
-        stmt = stmt.where(RequestMetric.created_at >= cutoff)
-    stmt = stmt.group_by("time_bucket").order_by("time_bucket")
+    try:
+        time_bucket = func.date_trunc(bucket, RequestMetric.created_at).label("time_bucket")
+        stmt = select(
+            time_bucket,
+            func.count(RequestMetric.id).label("requests"),
+            func.sum(success_case).label("successes"),
+            func.sum(error_case).label("errors"),
+            func.avg(RequestMetric.total_latency_ms).label("avg_latency"),
+            func.coalesce(func.sum(RequestMetric.total_tokens), 0).label("tokens"),
+        )
+        if cutoff:
+            stmt = stmt.where(RequestMetric.created_at >= cutoff)
+        stmt = stmt.group_by("time_bucket").order_by("time_bucket")
+        result = await session.execute(stmt)
+        rows = list(result)
+    except Exception:
+        fmt = "%Y-%m-%d %H:00:00" if bucket == "hour" else "%Y-%m-%d 00:00:00"
+        time_bucket = func.strftime(fmt, RequestMetric.created_at).label("time_bucket")
+        stmt = select(
+            time_bucket,
+            func.count(RequestMetric.id).label("requests"),
+            func.sum(success_case).label("successes"),
+            func.sum(error_case).label("errors"),
+            func.avg(RequestMetric.total_latency_ms).label("avg_latency"),
+            func.coalesce(func.sum(RequestMetric.total_tokens), 0).label("tokens"),
+        )
+        if cutoff:
+            stmt = stmt.where(RequestMetric.created_at >= cutoff)
+        stmt = stmt.group_by("time_bucket").order_by("time_bucket")
+        result = await session.execute(stmt)
+        rows = list(result)
 
-    result = await session.execute(stmt)
     return [
         {
             "timestamp": row.time_bucket,
@@ -1231,7 +1268,7 @@ async def metrics_timeseries(
             "avg_latency_ms": int(row.avg_latency or 0),
             "tokens": int(row.tokens or 0),
         }
-        for row in result
+        for row in rows
     ]
 
 @router.get("/quota")

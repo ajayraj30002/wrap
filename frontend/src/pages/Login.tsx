@@ -94,7 +94,7 @@ export function Login() {
             />
             <div className="brand-divider" />
             <div className="brand-badge-cluster font-mono">
-              <span className="brand-version">v1.4.2 · PRODUCTION ENGINE</span>
+              <span className="brand-version">v1.4.2</span>
               <span className="brand-status-dot" />
               <span className="brand-airgap">SELF-HOSTED</span>
             </div>

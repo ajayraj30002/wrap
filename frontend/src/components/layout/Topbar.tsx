@@ -115,7 +115,7 @@ export function Topbar() {
       {/* Right: Version, Theme Switcher, Sign out */}
       <div className="topbar-right-cluster">
         <div className="topbar-version-pill">
-          <span>v1.0.0</span>
+          <span>v1.4.2</span>
         </div>
 
         <div className="topbar-divider" />

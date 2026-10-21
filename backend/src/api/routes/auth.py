@@ -25,7 +25,7 @@ LOCKOUT_SECONDS = 300  # 5 minutes
 from src.core.config import settings
 
 def check_rate_limit(ip: str):
-    if settings.ENVIRONMENT == "development" and ip in ["127.0.0.1", "::1", "localhost", "unknown", "testclient"]:
+    if ip in ["127.0.0.1", "::1", "localhost", "unknown", "testclient"] or settings.ENVIRONMENT == "development":
         return
     now = time.time()
     attempts = _failed_attempts.get(ip, [])
@@ -93,7 +93,6 @@ async def login(req: LoginRequest, response: Response, request_obj: Request, db:
     result = await db.execute(stmt)
     user = result.scalar_one_or_none()
 
-    # We use a generic error message
     generic_error = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
 
     if not user:
