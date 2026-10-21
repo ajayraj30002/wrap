@@ -13,9 +13,9 @@
 </p>
 
 <p align="center">
-  <a href="#-quickstart"><img src="https://img.shields.io/badge/Version-v1.4.2-0284c7?style=for-the-badge&logo=git&logoColor=white" alt="Version" /></a>
-  <a href="#-key-features"><img src="https://img.shields.io/badge/Engine-Self--Healing%20AI-9333ea?style=for-the-badge&logo=lightning&logoColor=white" alt="Self-Healing Engine" /></a>
-  <a href="#-supported-providers"><img src="https://img.shields.io/badge/OpenAI-Drop--in%20v1-7c3aed?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Compatible" /></a>
+  <a href="#quickstart"><img src="https://img.shields.io/badge/Version-v1.4.2-0284c7?style=for-the-badge&logo=git&logoColor=white" alt="Version" /></a>
+  <a href="#core-capabilities"><img src="https://img.shields.io/badge/Engine-Self--Healing%20AI-9333ea?style=for-the-badge&logo=lightning&logoColor=white" alt="Self-Healing Engine" /></a>
+  <a href="#supported-providers"><img src="https://img.shields.io/badge/OpenAI-Drop--in%20v1-7c3aed?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Compatible" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-16a34a?style=for-the-badge&logo=apache&logoColor=white" alt="License" /></a>
 </p>
 
@@ -23,18 +23,18 @@
   <a href="https://github.com/ajayraj30002/wrap/actions"><img src="https://img.shields.io/badge/CI-Passing-22c55e?style=for-the-badge&logo=githubactions&logoColor=white" alt="CI Status" /></a>
   <a href="docker-compose.yml"><img src="https://img.shields.io/badge/Docker-Compose%20Ready-2496ed?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Ready" /></a>
   <a href="k8s/"><img src="https://img.shields.io/badge/Kubernetes-Kustomize-326ce5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes" /></a>
-  <a href="#-enterprise-architecture"><img src="https://img.shields.io/badge/Python%20%7C%20React-3.11+%20%7C%2019-f59e0b?style=for-the-badge&logo=python&logoColor=white" alt="Stack" /></a>
+  <a href="#system-architecture"><img src="https://img.shields.io/badge/Python%20%7C%20React-3.11+%20%7C%2019-f59e0b?style=for-the-badge&logo=python&logoColor=white" alt="Stack" /></a>
 </p>
 
 <p align="center">
-  <a href="#-about-wrap"><strong>About</strong></a> •
-  <a href="#-quickstart"><strong>Quickstart</strong></a> •
-  <a href="#-key-features"><strong>Key Features</strong></a> •
-  <a href="#-autonomous-dag-orchestration"><strong>DAG Engine</strong></a> •
-  <a href="#-supported-providers"><strong>Providers</strong></a> •
-  <a href="#-enterprise-architecture"><strong>Architecture</strong></a> •
-  <a href="#-client-sdk-usage"><strong>SDK Integration</strong></a> •
-  <a href="#-deployment-modes"><strong>Deployment</strong></a>
+  <a href="#about-wrap"><strong>About</strong></a> •
+  <a href="#why-wrap"><strong>Why WRAP</strong></a> •
+  <a href="#core-capabilities"><strong>Capabilities</strong></a> •
+  <a href="#supported-providers"><strong>Providers</strong></a> •
+  <a href="#quickstart"><strong>Quickstart</strong></a> •
+  <a href="#client-sdk-usage"><strong>SDK Integration</strong></a> •
+  <a href="#system-architecture"><strong>Architecture</strong></a> •
+  <a href="#configuration--environment-reference"><strong>Configuration</strong></a>
 </p>
 
 ---
@@ -46,46 +46,45 @@
 
 ---
 
-## ⚡ About WRAP
+## About WRAP
 
 **WRAP** (*Wrapping Free Tiers into an Ultimate Challenger*) is an enterprise-grade, high-throughput AI Gateway and Autonomous DAG Orchestration proxy built for mission-critical AI applications, autonomous agents, and developer toolchains. It exposes a single, zero-overhead **OpenAI-compatible drop-in endpoint** (`/v1/chat/completions`) that aggregates distributed LLM providers, balances encrypted credential pools, and strips multi-agent workloads into parallel execution graphs.
 
 Traditional AI gateways act merely as passive reverse proxies that pass through raw API requests, fragile rate limits, and broken model outputs. **WRAP operates as an active, self-healing scheduling kernel:**
 
-- **🛡️ Autonomous Self-Healing AI Engine:** Transparently intercepts provider errors (429 rate limits, 5xx outages, context window overflow, and hallucinated tool calls) and heals them in-flight without interrupting the client.
-- **⚡ Dynamic Multi-Agent DAG Orchestration:** Decomposes complex reasoning prompts into concurrent execution workstreams across specialized silicon (e.g., Deep Reasoning on Gemini, Ultra-fast Code on Groq LPUs, Instant Verification on Cerebras), collapsing sequential waterfalls into a single critical path.
-- **🔄 Free-Tier Arbitrage & Virtual Key Pools:** Seamlessly rotates paired free-tier credential buckets into unified, enterprise-grade virtual tiers with zero compute costs.
-- **🔒 Strict Zero-Leak Privacy:** Telemetry tracks operational metadata, token velocity, and latencies without ever logging or persisting user prompt payloads or sensitive completions.
-- **📊 Virtual Model Tiers & Spend Governance:** Hardware-isolated recursion safeguards, budget circuit breakers, and rate-limit virtualizers eliminate runaway agent loop billing.
+- **Autonomous Self-Healing AI Engine:** Transparently intercepts provider errors (429 rate limits, 5xx outages, context window overflow, and hallucinated tool calls) and heals them in-flight without interrupting the client.
+- **Dynamic Multi-Agent DAG Orchestration:** Decomposes complex reasoning prompts into concurrent execution workstreams across specialized silicon (e.g., Deep Reasoning on Gemini, Ultra-fast Code on Groq LPUs, Instant Verification on Cerebras), collapsing sequential waterfalls into a single critical path.
+- **Free-Tier Arbitrage & Virtual Key Pools:** Seamlessly rotates paired free-tier credential buckets into unified, enterprise-grade virtual tiers with zero compute costs.
+- **Strict Zero-Leak Privacy:** Telemetry tracks operational metadata, token velocity, and latencies without ever logging or persisting user prompt payloads or sensitive completions.
+- **Virtual Model Tiers & Spend Governance:** Hardware-isolated recursion safeguards, budget circuit breakers, and rate-limit virtualizers eliminate runaway agent loop billing.
 
 <!-- AUTONOMOUS SELF-HEALING AI ENGINE -->
 <p align="center">
   <img src="docs/assets/Autonomous%20Self-Healing%20AI%20Engine.png" alt="WRAP Autonomous Self-Healing AI Engine" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
 
-
-
 ---
 
-## 🌟 Why WRAP?
+## Why WRAP?
 
 Traditional AI gateways act merely as passive reverse proxies that pass through raw API requests, fragile rate limits, and broken model outputs. **WRAP operates as an active, self-healing scheduling kernel:**
 
 | Dimension | Vanilla Reverse Proxy (LiteLLM, Portkey, Kong) | WRAP Autonomous AI Engine |
 | :--- | :--- | :--- |
-| **Free-Tier Limits** | ❌ Fails with `429 Rate Limit Exceeded` when quota hits | ✅ **Preemptive Quota Virtualizer**: Predicts limits and rotates encrypted key pools *before* 429 happens |
-| **Tool Call Errors** | ❌ Drops agent calls when models hallucinate XML/raw text | ✅ **Autonomous Stream Tool Healer**: Intercepts & repairs corrupted tool calls & JSON in-flight (<0.5ms) |
-| **Free Silicon Mesh** | ❌ Requires manual provider selection per request | ✅ **Unified Virtual Tiers**: Coalesces Groq, Cerebras, Gemini, Mistral into high-throughput free compute |
-| **Reasoning Latency** | ❌ Slow sequential generation (1 model processes everything) | ✅ **Autonomous DAG Striping**: Partitions tasks into parallel workstreams across specialized silicon |
-| **Agent Runaway Loops**| ❌ No recursion detection; results in infinite billing loops | ✅ **Circuit Breakers & Spend Velocity Caps**: Hard recursion safeguards & budget cutoffs |
-| **Data Privacy** | ⚠️ Often logs full prompt/response payloads to DBs | ✅ **Zero-Payload Storage**: Telemetry records only metrics (tokens, latency); zero prompt persistence |
-| **Client Integration** | ⚠️ Proprietary SDKs or complex wrapper configurations | ✅ **100% Drop-in OpenAI v1 Compatible**: Works instantly with Cursor, Windsurf, Aider, LangChain |
+| **Free-Tier Limits** | Drops on 429 Rate Limit Exceeded | **Preemptive Quota Virtualizer**: Predicts limits and rotates encrypted key pools *before* 429 happens |
+| **Tool Call Errors** | Drops agent calls when models hallucinate XML/raw text | **Autonomous Stream Tool Healer**: Intercepts & repairs corrupted tool calls & JSON in-flight (<0.5ms) |
+| **Free Silicon Mesh** | Requires manual provider selection per request | **Unified Virtual Tiers**: Coalesces Groq, Cerebras, Gemini, Mistral into high-throughput free compute |
+| **Reasoning Latency** | Slow sequential generation (1 model processes everything) | **Autonomous DAG Striping**: Partitions tasks into parallel workstreams across specialized silicon |
+| **Agent Runaway Loops**| No recursion detection; results in infinite billing loops | **Circuit Breakers & Spend Velocity Caps**: Hard recursion safeguards & budget cutoffs |
+| **Data Privacy** | Often logs full prompt/response payloads to DBs | **Zero-Payload Storage**: Telemetry records only metrics (tokens, latency); zero prompt persistence |
+| **Client Integration** | Proprietary SDKs or complex wrapper configurations | **100% Drop-in OpenAI v1 Compatible**: Works instantly with Cursor, Windsurf, Aider, LangChain |
+
 
 ---
 
-## 🚀 Core Architectural Superpowers
+## Core Capabilities & Architecture
 
-### 1. 🛡️ In-Flight Stream Reconstruction & Autonomous Tool Healer
+### 1. In-Flight Stream Reconstruction & Autonomous Tool Healer
 Production agentic workflows (Cursor, Windsurf, Roo Code, Aider) frequently break because frontier and open-weight models occasionally emit hallucinated text actions (e.g., `[Action: search(query="...")]`), corrupted XML tags (`<tool_call>...`), or split JSON schemas across streaming chunks.
 * **Zero-Latency Wire Repair:** WRAP’s streaming kernel parses SSE chunks mid-flight. When an invalid tool-call syntax is detected, it auto-extracts the intended function arguments, repairs incomplete JSON brackets, and re-synthesizes a valid OpenAI-compatible `tool_calls` delta with `finish_reason: "tool_calls"`.
 * **Zero Client Dropouts:** Guarantees 100% tool-call execution reliability even on smaller, aggressive open models.
@@ -100,7 +99,7 @@ Incoming Model Stream ──► [WRAP Stream Interceptor] ──► Validated Op
 
 ---
 
-### 2. ⚡ Preemptive Quota Virtualization & Free-Tier Multiplexing
+### 2. Preemptive Quota Virtualization & Free-Tier Multiplexing
 Free-tier providers (Groq, Cerebras, Google Gemini Flash, Mistral, SambaNova) offer frontier speeds (up to 2,000+ tokens/sec) but enforce strict request-per-minute (RPM) and token-per-minute (TPM) caps.
 * **Proactive Load Leveling:** Rather than waiting for a provider to return an error `429`, WRAP tracks token velocities and rate-limit windows in real time.
 * **Autonomous Key Striping:** Multiplexes load across encrypted pools of free-tier keys, seamlessly rolling traffic to fresh credentials before provider quotas saturate.
@@ -108,7 +107,7 @@ Free-tier providers (Groq, Cerebras, Google Gemini Flash, Mistral, SambaNova) of
 
 ---
 
-### 3. 🎯 Autonomous Model Tiers & Dynamic Routing (`auto`)
+### 3. Autonomous Model Tiers & Dynamic Routing (`auto`)
 Eliminate brittle, hardcoded model strings in your applications. WRAP categorizes all connected models into high-level virtual tiers with autonomous Quality-of-Service (QoS) prioritization:
 
 * **`auto`**: Dynamically routes each prompt to the fastest, healthiest, and most cost-effective worker based on real-time latency and quota headroom.
@@ -120,7 +119,7 @@ Eliminate brittle, hardcoded model strings in your applications. WRAP categorize
 
 ---
 
-### 4. ⚡ Autonomous Multi-Agent DAG Orchestration
+### 4. Autonomous Multi-Agent DAG Orchestration
 Complex reasoning prompts are not meant to run in a sequential waterfall. WRAP’s internal DAG analyzer decomposes multi-faceted requests into up to 5 concurrent workstreams across specialized silicon:
 
 ```
@@ -139,7 +138,7 @@ Complex reasoning prompts are not meant to run in a sequential waterfall. WRAP�
 
 ---
 
-### 5. 🔒 Zero-Payload Privacy & Cryptographic Enclave
+### 5. Zero-Payload Privacy & Cryptographic Enclave
 Built from the ground up for strict enterprise security compliance:
 * **Zero Payload Retention:** WRAP’s telemetry and persistence engines record only operational metrics (token count, duration, TTFT, model IDs, status codes). **Your prompts, messages, and model completions are NEVER written to disk, databases, or external loggers.**
 * **Hardware-Derived Key Encryption:** Provider secrets and keys are encrypted at rest using AES-128-CBC via Fernet cryptography with master key derivation.
@@ -152,7 +151,7 @@ Built from the ground up for strict enterprise security compliance:
 
 ---
 
-### 6. 📊 Real-Time Observability & Spend Circuit Breakers
+### 6. Real-Time Observability & Spend Circuit Breakers
 Maintain complete visibility and governance over your AI infrastructure:
 * **Live Latency Percentiles:** Tracks P50, P95, and P99 response times per provider, model, and virtual tier.
 * **Token Velocity & Burn-Down:** Live SSE streaming meters measuring tokens per second, prompt vs. completion ratios, and historical cost allocations.
@@ -171,28 +170,28 @@ Maintain complete visibility and governance over your AI infrastructure:
 
 ---
 
-## 🧩 Supported Providers
+## Supported Providers
 
 WRAP normalizes provider-specific protocols into the standard OpenAI v1 schema.
 
 | Provider | Supported Models & Silicon | `/v1/chat/completions` | Stream (SSE) | Tool Calling | Vision | Auto-Fallback | Free-Tier Striping |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Google Gemini** | `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-3.1-flash-lite`, `deep-research` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Groq LPU** | `llama-3.3-70b-versatile`, `qwen/qwen3.8-27b`, `mixtral-8x7b` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Cerebras** | `llama3.3-70b`, `llama3.1-8b` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| **OpenAI** | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini`, `openai/gpt-oss-120b` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Anthropic** | `claude-3-7-sonnet`, `claude-3-5-haiku`, `claude-3-opus` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **DeepSeek** | `deepseek-chat`, `deepseek-reasoner`, `deepseek-r1` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| **Ollama / Local** | `llama3`, `deepseek-r1`, `qwen2.5-coder` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Mistral AI** | `mistral-large`, `codestral`, `open-mistral` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| **Together AI** | `meta-llama/Llama-3-70b`, `deepseek-ai/DeepSeek-V3` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| **SambaNova** | `Meta-Llama-3.1-405B-Instruct`, `Llama-3.1-70B` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| **Perplexity** | `sonar-pro`, `sonar-reasoning` | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| **xAI** | `grok-2`, `grok-2-mini` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Google Gemini** | `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-3.1-flash-lite`, `deep-research` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **Groq LPU** | `llama-3.3-70b-versatile`, `qwen/qwen3.8-27b`, `mixtral-8x7b` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **Cerebras** | `llama3.3-70b`, `llama3.1-8b` | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| **OpenAI** | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini`, `openai/gpt-oss-120b` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **Anthropic** | `claude-3-7-sonnet`, `claude-3-5-haiku`, `claude-3-opus` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **DeepSeek** | `deepseek-chat`, `deepseek-reasoner`, `deepseek-r1` | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| **Ollama / Local** | `llama3`, `deepseek-r1`, `qwen2.5-coder` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **Mistral AI** | `mistral-large`, `codestral`, `open-mistral` | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| **Together AI** | `meta-llama/Llama-3-70b`, `deepseek-ai/DeepSeek-V3` | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| **SambaNova** | `Meta-Llama-3.1-405B-Instruct`, `Llama-3.1-70B` | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| **Perplexity** | `sonar-pro`, `sonar-reasoning` | ✓ | ✓ | — | — | ✓ | ✓ |
+| **xAI** | `grok-2`, `grok-2-mini` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 ---
 
-## ⚡ Quickstart
+## Quickstart
 
 Get WRAP running locally or in production in under 60 seconds.
 
@@ -296,7 +295,7 @@ kubectl get ingress -n wrap
 
 ---
 
-## 💻 Client SDK Usage
+## Client SDK Usage
 
 WRAP is 100% wire-compatible with standard OpenAI libraries across Python, Node.js, Go, and cURL. Simply point `base_url` to your WRAP gateway.
 
@@ -367,7 +366,7 @@ curl -N http://localhost:8000/v1/chat/completions \
 
 ---
 
-## ⚙️ Configuration & Environment Reference
+## Configuration & Environment Reference
 
 All bootstrap environment variables live in `backend/.env`. Upstream provider credentials are saved securely in PostgreSQL via the Control Console or `POST /api/credentials`.
 
@@ -384,7 +383,7 @@ All bootstrap environment variables live in `backend/.env`. Upstream provider cr
 
 ---
 
-## 🏛️ Enterprise Architecture
+## System Architecture
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
@@ -425,21 +424,21 @@ All bootstrap environment variables live in `backend/.env`. Upstream provider cr
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 Detailed deep-dives are located across the repository documentation:
 
-* 📖 **[API Reference](API.md)** — Comprehensive OpenAPI specifications, parameter forwarding rules, and management endpoints.
-* 🏛️ **[System Architecture](ARCHITECTURE.md)** — Architectural patterns, memory footprint, and scheduling lifecycle.
-* 🔌 **[Provider Adapters](PROVIDERS.md)** — Adding new LLM providers, error normalization, and capability manifests.
-* ⚙️ **[Configuration Manual](CONFIGURATION.md)** — Advanced runtime options, pool sizing, and network timeouts.
-* 💾 **[Database Schemas](DATABASE.md)** — SQLAlchemy 2.0 relational schema, indices, and audit tables.
-* ☸️ **[Kubernetes Guide](k8s/README.md)** — StatefulSet storage, ServiceMonitors, and rolling cluster upgrades.
-* 🛠️ **[Development Guide](DEVELOPMENT.md)** — Test fixtures, mock providers, and contribution workflows.
+* **[API Reference](API.md)** — Comprehensive OpenAPI specifications, parameter forwarding rules, and management endpoints.
+* **[System Architecture](ARCHITECTURE.md)** — Architectural patterns, memory footprint, and scheduling lifecycle.
+* **[Provider Adapters](PROVIDERS.md)** — Adding new LLM providers, error normalization, and capability manifests.
+* **[Configuration Manual](CONFIGURATION.md)** — Advanced runtime options, pool sizing, and network timeouts.
+* **[Database Schemas](DATABASE.md)** — SQLAlchemy 2.0 relational schema, indices, and audit tables.
+* **[Kubernetes Guide](k8s/README.md)** — StatefulSet storage, ServiceMonitors, and rolling cluster upgrades.
+* **[Development Guide](DEVELOPMENT.md)** — Test fixtures, mock providers, and contribution workflows.
 
 ---
 
-## 🤝 Contributing & Community
+## Contributing & Community
 
 We welcome contributions to WRAP! Whether it's adding new provider adapters, optimizing DAG scheduling algorithms, or enhancing the Control Console:
 
@@ -451,10 +450,10 @@ We welcome contributions to WRAP! Whether it's adding new provider adapters, opt
 
 ---
 
-## 📄 License
+## License
 
 Distributed under the Apache 2.0 License. See `LICENSE` for more information.
 
 <p align="center">
-  <sub>Built with ❤️ by the WRAP Core Team. Designed for resilient, multi-agent AI infrastructure.</sub>
+  <sub>Maintained by the WRAP Core Team. Designed for resilient, multi-agent AI infrastructure.</sub>
 </p>
