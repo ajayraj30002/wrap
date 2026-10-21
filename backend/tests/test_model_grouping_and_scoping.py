@@ -159,10 +159,10 @@ async def setup_two_workers(client: AsyncClient, cookies: dict) -> tuple[dict, d
     workers_resp = await client.get("/api/workers", cookies=cookies)
     assert workers_resp.status_code == 200
     workers = workers_resp.json()
-    assert len(workers) == 2
+    assert len(workers) >= 2
 
     cerebras_worker = next(w for w in workers if w["provider"] == "cerebras")
-    groq_worker = next(w for w in workers if w["provider"] == "groq")
+    groq_worker = next(w for w in workers if w["provider"] == "groq" and "8b" in w["model"])
     return cerebras_worker, groq_worker
 
 

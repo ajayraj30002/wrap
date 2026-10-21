@@ -33,7 +33,7 @@ from src.analytics.service import AnalyticsService
 from src.db.models import utcnow
 from src.services.cache import gateway_cache
 from src.services.rate_limiter import gateway_rate_limiter, upstream_quota_limiter
-from src.services.model_groups import is_virtual_group, get_group, model_matches_group, expand_group_models
+from src.services.model_groups import is_virtual_group, get_group, model_matches_group, expand_group_models, is_worker_matching_tier
 from src.services.budget import BudgetService
 from src.services.pricing import is_worker_or_credential_paid
 
@@ -194,7 +194,11 @@ async def _verify_gateway_key_access(gateway_key: GatewayApiKey, requested_model
         if requested_model.lower() not in ("auto", "wrap-auto", "default", "wrap", "", "intelligent"):
             if is_virtual_group(requested_model):
                 group = get_group(requested_model)
-                if not any(model_matches_group(m, group.models) for m in allowed_models):
+                matches = (
+                    any(model_matches_group(m, group.models) for m in allowed_models)
+                    or any(is_worker_matching_tier(w, requested_model) for w in allowed_workers)
+                )
+                if not matches:
                     raise _openai_http_error(
                         f"API key is not authorized for any models in virtual group '{requested_model}'. Allowed models for this key: {sorted(list(allowed_models))}",
                         "permission_denied",
@@ -1618,7 +1622,7 @@ async def _route_single_worker(
                 matched_group = False
                 for g_id in allowed_groups_raw:
                     g = get_group(g_id)
-                    if g and model_matches_group(body.model, g.models):
+                    if g and (model_matches_group(body.model, g.models) or is_worker_matching_tier(body.model, g_id)):
                         matched_group = True
                         break
                 if not matched_group:
@@ -1628,7 +1632,6 @@ async def _route_single_worker(
                         403,
                     )
 
-        from src.services.model_groups import expand_group_models
         expanded_models = []
         for g_id in allowed_groups_raw:
             g = get_group(g_id)
@@ -1637,11 +1640,15 @@ async def _route_single_worker(
 
         w_stmt = (
             select(Worker)
-            .where(Worker.model.in_(expanded_models))
+            .options(selectinload(Worker.provider))
             .where(Worker.enabled.is_(True))
         )
         w_res = await session.execute(w_stmt)
-        tier_workers = list(w_res.scalars().all())
+        all_workers = list(w_res.scalars().all())
+        tier_workers = [
+            w for w in all_workers
+            if w.model in expanded_models or any(is_worker_matching_tier(w, g_id) for g_id in allowed_groups_raw)
+        ]
         if not tier_workers:
             raise _openai_http_error("All workers participating in this API key's virtual tiers are currently offline or disabled.", "service_unavailable", 503)
 

@@ -61,6 +61,14 @@ class Scheduler:
                 group_stmt = group_stmt.where(Worker.id.in_(allowed_worker_ids))
             result = await session.execute(group_stmt)
             candidates = list(result.scalars().all())
+            if not candidates:
+                # Autonomous fallback: match any enabled worker from any provider satisfying the tier
+                from src.services.model_groups import is_worker_matching_tier
+                fallback_stmt = statement
+                if allowed_worker_ids is not None:
+                    fallback_stmt = fallback_stmt.where(Worker.id.in_(allowed_worker_ids))
+                all_active = list((await session.execute(fallback_stmt)).scalars().all())
+                candidates = [w for w in all_active if is_worker_matching_tier(w, group.id)]
             if candidates:
                 # Prioritize by non-saturated quota, token mass affinity, then group model order, then LRU
                 model_priority = {m: i for i, m in enumerate(expanded_models)}

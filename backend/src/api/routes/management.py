@@ -1717,7 +1717,6 @@ async def list_model_groups_endpoint(session: AsyncSession = Depends(get_session
     from src.db.models import Worker
     from sqlalchemy.orm import selectinload
 
-    groups = list_virtual_groups()
     w_res = await session.execute(
         select(Worker)
         .options(selectinload(Worker.provider))
@@ -1725,10 +1724,5 @@ async def list_model_groups_endpoint(session: AsyncSession = Depends(get_session
     )
     active_workers = w_res.scalars().all()
 
-    for g in groups:
-        g["active_workers_count"] = sum(
-            1 for w in active_workers
-            if model_matches_group(w.model, g["models"], provider_name=w.provider.name if w.provider else None)
-        )
-    return groups
+    return list_virtual_groups(active_workers=active_workers)
 
