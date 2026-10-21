@@ -5,6 +5,7 @@ Place your visual assets (screenshots, screen recordings, GIFs) in this director
 | Filename | Purpose | Recommended Format | Suggested Dimensions |
 | :--- | :--- | :--- | :--- |
 | `dashboard-overview.png` | Main Hero: Enterprise Control Room Overview dashboard | High-res PNG | 1920 × 1080 (16:9) |
+| `Autonomous Self-Healing AI Engine.png` | Cinematic 3D visual of WRAP's Self-Healing Engine intercepting 429s & errors in-flight | High-res PNG | 1920 × 1080 (16:9) |
 | `wrap-architecture-diagram.png` | High-tech visual architecture diagram of WRAP AI Gateway Kernel & multi-silicon mesh | High-res PNG | 1376 × 768 (16:9) |
 | `dag-pipeline.gif` | Live DAG execution pipeline showing real-time workstream routing & striping | Animated GIF / WebP | 1280 × 720 or 1600 × 900 |
 | `analytics-dashboard.png` | Deep telemetry, cost burn-down, latency P95/P99 charts | High-res PNG | 1920 × 1080 (16:9) |

@@ -58,10 +58,11 @@ Traditional AI gateways act merely as passive reverse proxies that pass through 
 - **🔒 Strict Zero-Leak Privacy:** Telemetry tracks operational metadata, token velocity, and latencies without ever logging or persisting user prompt payloads or sensitive completions.
 - **📊 Virtual Model Tiers & Spend Governance:** Hardware-isolated recursion safeguards, budget circuit breakers, and rate-limit virtualizers eliminate runaway agent loop billing.
 
-<!-- KERNEL ARCHITECTURE FLOW DIAGRAM -->
+<!-- AUTONOMOUS SELF-HEALING AI ENGINE -->
 <p align="center">
-  <img src="docs/assets/wrap-architecture-diagram.png" alt="WRAP AI Gateway Kernel Architecture" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
+  <img src="docs/assets/Autonomous%20Self-Healing%20AI%20Engine.png" alt="WRAP Autonomous Self-Healing AI Engine" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
+
 
 
 ---
