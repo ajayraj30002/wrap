@@ -13,11 +13,17 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ajayraj30002/wrap/actions"><img src="https://img.shields.io/badge/CI-passing-22c55e?style=for-the-badge&logo=githubactions&logoColor=white" alt="CI Status" /></a>
-  <a href="https://hub.docker.com"><img src="https://img.shields.io/badge/Docker-Ready-2563eb?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Ready" /></a>
-  <a href="https://kubernetes.io"><img src="https://img.shields.io/badge/Kubernetes-Kustomize-326ce5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes" /></a>
-  <a href="#supported-providers"><img src="https://img.shields.io/badge/OpenAI-Drop--in%20v1-7c3aed?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Compatible" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-0ea5e9?style=for-the-badge" alt="License" /></a>
+  <a href="#-quickstart"><img src="https://img.shields.io/badge/Version-v1.4.2-0284c7?style=for-the-badge&logo=git&logoColor=white" alt="Version" /></a>
+  <a href="#-key-features"><img src="https://img.shields.io/badge/Engine-Self--Healing%20AI-9333ea?style=for-the-badge&logo=lightning&logoColor=white" alt="Self-Healing Engine" /></a>
+  <a href="#-supported-providers"><img src="https://img.shields.io/badge/OpenAI-Drop--in%20v1-7c3aed?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Compatible" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-16a34a?style=for-the-badge&logo=apache&logoColor=white" alt="License" /></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/ajayraj30002/wrap/actions"><img src="https://img.shields.io/badge/CI-Passing-22c55e?style=for-the-badge&logo=githubactions&logoColor=white" alt="CI Status" /></a>
+  <a href="docker-compose.yml"><img src="https://img.shields.io/badge/Docker-Compose%20Ready-2496ed?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Ready" /></a>
+  <a href="k8s/"><img src="https://img.shields.io/badge/Kubernetes-Kustomize-326ce5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes" /></a>
+  <a href="#-enterprise-architecture"><img src="https://img.shields.io/badge/Python%20%7C%20React-3.11+%20%7C%2019-f59e0b?style=for-the-badge&logo=python&logoColor=white" alt="Stack" /></a>
 </p>
 
 <p align="center">
@@ -29,14 +35,6 @@
   <a href="#-enterprise-architecture"><strong>Architecture</strong></a> •
   <a href="#-client-sdk-usage"><strong>SDK Integration</strong></a> •
   <a href="#-deployment-modes"><strong>Deployment</strong></a>
-</p>
-
-<p align="center">
-  <a href="https://docker.com"><img src="https://img.shields.io/badge/Deploy%20with-Docker%20Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Deploy with Docker" /></a>
-  <a href="k8s/"><img src="https://img.shields.io/badge/Deploy%20on-Kubernetes%20K8s-326CE5?style=flat-square&logo=kubernetes&logoColor=white" alt="Deploy on K8s" /></a>
-  <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/FastAPI-0.115+-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI" /></a>
-  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" /></a>
-  <a href="https://www.postgresql.org"><img src="https://img.shields.io/badge/PostgreSQL-16+-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" /></a>
 </p>
 
 ---
