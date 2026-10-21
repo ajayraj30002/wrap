@@ -163,11 +163,6 @@ Maintain complete visibility and governance over your AI infrastructure:
   <img src="docs/assets/analytics-dashboard.png" alt="WRAP Real-time Telemetry & Cost Dashboard" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
 
-<!-- WORKER TOPOLOGY VISUAL -->
-<p align="center">
-  <img src="docs/assets/worker-topology.png" alt="Worker Topology & Live Health Matrix" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
-</p>
-
 ---
 
 ## Supported Providers
