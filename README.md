@@ -58,18 +58,11 @@ Traditional AI gateways act merely as passive reverse proxies that pass through 
 - **🔒 Strict Zero-Leak Privacy:** Telemetry tracks operational metadata, token velocity, and latencies without ever logging or persisting user prompt payloads or sensitive completions.
 - **📊 Virtual Model Tiers & Spend Governance:** Hardware-isolated recursion safeguards, budget circuit breakers, and rate-limit virtualizers eliminate runaway agent loop billing.
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                  WRAP AI GATEWAY KERNEL                                │
-│                                                                                        │
-│  [Any OpenAI SDK] ──► [Auth & Guardrails] ──► [Self-Healing Engine] ──► [DAG Analyzer] │
-│                                                                                │       │
-│            ┌─────────────────────────────┬─────────────────────────────────────┴───┐   │
-│            ▼                             ▼                                         ▼   │
-│    [Groq LPU Engine]            [Cerebras Speed Tier]                    [Gemini Pro]  │
-│    500+ tok/s Code              Sub-200ms Synthetics                     Frontier Logic│
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
+<!-- KERNEL ARCHITECTURE FLOW DIAGRAM -->
+<p align="center">
+  <img src="docs/assets/wrap-architecture-diagram.png" alt="WRAP AI Gateway Kernel Architecture" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
+</p>
+
 
 ---
 
