@@ -43,7 +43,6 @@
 <p align="center">
   <img src="docs/assets/dashboard-overview.png" alt="WRAP Enterprise Mission Control Room" width="100%" style="border-radius: 8px; border: 1px solid #1e293b; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);" />
 </p>
-<p align="center"><em>Figure 1: WRAP Operator Control Room — Real-time telemetry, model group routing, and multi-tenant quota tracking.</em></p>
 
 ---
 
@@ -102,11 +101,10 @@ Rather than executing complex reasoning and code workloads sequentially, WRAP’
                                               └─ Branch 5: Cross-Contract Integration (Schema Aggregator)
 ```
 
-<!-- DAG GIF MEDIA PLACEHOLDER -->
+<!-- DAG LIVE EXECUTION PIPELINE -->
 <p align="center">
   <img src="docs/assets/dag-pipeline.gif" alt="WRAP Live DAG Execution Pipeline" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
-<p align="center"><em>Figure 2: Real-time Live DAG Pipeline visualizer executing multi-workstream routing with sub-millisecond dependency resolution.</em></p>
 
 ---
 
@@ -124,11 +122,10 @@ Inspect cluster-wide throughput, token velocities, and spend burn-down across al
 - **Real-time token counter** tracking prompt vs. completion consumption across billable cycles.
 - **SSE streaming latency monitors** measuring time-to-first-token (TTFT) and token jitter.
 
-<!-- ANALYTICS SCREENSHOT PLACEHOLDER -->
+<!-- ANALYTICS SCREENSHOT -->
 <p align="center">
   <img src="docs/assets/analytics-dashboard.png" alt="WRAP Real-time Telemetry & Cost Dashboard" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
-<p align="center"><em>Figure 3: Deep telemetry analytics — Token velocity meters, latency percentiles, and live request distribution.</em></p>
 
 ---
 
@@ -138,15 +135,14 @@ Enterprise identity controls powered by Fernet AES-128-CBC encryption for provid
 - **Role-based admin access:** Instant revocation, credential rotation, and masked key inspection.
 - **Production-ready setup wizard:** 1-Click admin onboarding and gateway key rotation.
 
-<!-- LOGIN SCREENSHOT PLACEHOLDER -->
+<!-- LOGIN SCREENSHOT -->
 <p align="center">
   <img src="docs/assets/operator-login.png" alt="WRAP Operator Authentication Console" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
-<p align="center"><em>Figure 4: Operator Security Console — Enterprise administrative barrier securing gateway management APIs.</em></p>
 
 ---
 
-### 5. Virtual Model Tiers & Multi-Provider Cascades
+### 5. Virtual Model Tiers & Spend Governance
 Route client requests to high-level virtual aliases with autonomous QoS prioritization, load balancing, and transparent failover:
 - `fast-tier`: Ultra-low TTFT and high-throughput streaming inference across Groq LPUs and Gemini Flash.
 - `reasoning-tier`: Deep reasoning, complex logic, and high benchmark capability (GPT-OSS-120B, Gemini 2.5 Pro, Deep Research).
@@ -155,17 +151,6 @@ Route client requests to high-level virtual aliases with autonomous QoS prioriti
 - `ensemble-consensus`: High-speed primary generation verified concurrently by a deep reasoning model for frontier accuracy.
 - `auto`: Automatically select the optimal healthy worker based on cost, latency, and current quota availability.
 - **Spend Governance & Guardrails:** Hardware-isolated recursion safeguards, budget circuit breakers, and rate-limit virtualizers eliminate runaway agent billing.
-
-<!-- MODEL TIERS & BUDGETS VISUALS -->
-<p align="center">
-  <img src="docs/assets/model-tiers-budgets.png" alt="Autonomous Virtual Model Tiers & Priority Cascades" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
-</p>
-<p align="center"><em>Figure 5a: Autonomous Virtual Tiers — Fast LPU Tier (36 workers online) and Frontier Reasoning Tier (15 workers online) with dynamic multi-provider fallback cascades.</em></p>
-
-<p align="center">
-  <img src="docs/assets/model-tiers-cascades.png" alt="Economy, Code & Consensus Virtual Tiers" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
-</p>
-<p align="center"><em>Figure 5b: Autonomous Virtual Tiers — Economy Tier (37 workers online), Code Tier (12 workers online), and Dual-Model Consensus Tier (42 workers online).</em></p>
 
 ---
 
@@ -179,7 +164,6 @@ Every provider credential spins up an isolated worker node within WRAP’s inter
 <p align="center">
   <img src="docs/assets/worker-topology.png" alt="Worker Topology & Live Health Matrix" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
-<p align="center"><em>Figure 6: Real-time computational worker grid displaying live state, concurrency, latency, and error tracking per worker node across 14 providers.</em></p>
 
 ---
 
@@ -210,73 +194,82 @@ Get WRAP running locally or in production in under 60 seconds.
 
 ### Option 1: Docker Compose (Production Stack — Recommended)
 
-The quickest way to launch WRAP along with PostgreSQL 16, backend API, and React Control Console:
+The fastest, zero-friction path to launching WRAP with PostgreSQL 16, FastAPI backend gateway, and React 19 Control Console:
 
 ```bash
-# 1. Clone the repository
+# 1. Clone repository
 git clone https://github.com/ajayraj30002/wrap.git
 cd wrap
 
-# 2. Configure master key & database credentials
+# 2. Configure master key & secrets (sensible defaults provided out of the box)
 cp backend/.env.example backend/.env
 
-# 3. Launch the full stack (PostgreSQL + FastAPI Gateway + React Mission Control)
+# 3. Launch cluster
 docker compose up -d --build
 ```
 
-#### Terminal Output Verification
+#### Services & Endpoint Verification
 
-```text
-[+] Running 4/4
- ✔ Network wrap_wrap_net         Created                               0.1s
- ✔ Container wrap-postgres-1     Healthy                               4.2s
- ✔ Container wrap-backend-1      Healthy (Listening on :8000)          3.8s
- ✔ Container wrap-frontend-1     Started (Serving UI on :3000)         1.2s
+Once initialized, all cluster services become accessible:
 
-=============================================================================
-  WRAP GATEWAY IS ONLINE:
-  - Control Console:  http://localhost:3000
-  - OpenAI Endpoint:  http://localhost:8000/v1/chat/completions
-  - Health Endpoint:  http://localhost:8000/healthz
-=============================================================================
+| Service | Port | Endpoint URL | Purpose |
+| :--- | :---: | :--- | :--- |
+| **Control Console** | `:3000` | `http://localhost:3000` | Real-time telemetry, provider credentials, and virtual tiers |
+| **OpenAI Gateway** | `:8000` | `http://localhost:8000/v1/chat/completions` | OpenAI drop-in compatible inference API |
+| **Health Check** | `:8000` | `http://localhost:8000/healthz` | Kubernetes liveness/readiness probe |
+| **PostgreSQL 16** | `:5433` | `localhost:5433` | Host-mapped relational storage for credentials & telemetry |
+
+Verify gateway health instantly:
+
+```bash
+curl -s http://localhost:8000/healthz
+# {"status":"ok","version":"1.4.2","database":"connected"}
 ```
 
 ---
 
 ### Option 2: Bare-Metal Local Development
 
-For developers building features, writing provider adapters, or customizing the dashboard:
+For engineers building custom provider adapters, tuning DAG routing, or developing dashboard components:
 
 ```bash
-# -------------------------------------------------------------
-# STEP 1: Spin up PostgreSQL persistence
-# -------------------------------------------------------------
+# -----------------------------------------------------------------
+# 1. Spin up persistent PostgreSQL 16 via Docker (mapped to port 5433)
+# -----------------------------------------------------------------
 docker compose up -d postgres
 
-# -------------------------------------------------------------
-# STEP 2: Configure & Start Python Backend (FastAPI + AsyncPG)
-# -------------------------------------------------------------
+# -----------------------------------------------------------------
+# 2. Configure & launch Python backend (FastAPI + AsyncPG)
+# -----------------------------------------------------------------
 cd backend
+cp .env.example .env
+
+# Set up virtual environment
 python -m venv venv
 
+# Activate:
+# Linux / macOS:
+source venv/bin/activate
 # Windows (PowerShell):
 .\venv\Scripts\Activate.ps1
-# macOS / Linux:
-source venv/bin/activate
 
+# Install dependencies & run database migrations
 pip install -r requirements.txt
 alembic upgrade head
-uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 
-# -------------------------------------------------------------
-# STEP 3: Start Frontend Control Console (React 19 + Vite)
-# -------------------------------------------------------------
-cd ../frontend
+# Start API server with auto-reload
+uvicorn src.main:app --host 127.0.0.1 --port 8000 --reload
+
+# -----------------------------------------------------------------
+# 3. Launch React Control Console (React 19 + Vite)
+# -----------------------------------------------------------------
+# In a new terminal:
+cd frontend
 npm install
 npm run dev
 ```
 
-The React dashboard will be running at `http://localhost:5173`, proxying API requests to the backend at `http://localhost:8000`.
+The React dashboard runs at `http://localhost:5173` with instant Hot Module Replacement (HMR), automatically proxying backend requests to `http://localhost:8000`.
 
 ---
 
