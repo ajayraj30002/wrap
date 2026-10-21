@@ -69,22 +69,59 @@ Traditional AI gateways act merely as passive reverse proxies that pass through 
 
 ## 🌟 Why WRAP?
 
-| Challenge with Vanilla Gateways | WRAP Enterprise Solution |
-| :--- | :--- |
-| **Aggressive Free-Tier Rate Limits** | Dynamic credential pooling & auto-striping distributes load across multiple encrypted keys seamlessly. |
-| **Provider Downtime & Outages** | Zero-downtime fallback cascades reroute failed requests across alternative models in `< 5ms`. |
-| **Malformed Tool Calls & JSON Errors** | **Self-Healing Engine** auto-extracts hallucinated text tools, fixes broken JSON schemas, and repairs streaming calls. |
-| **Heavy Reasoning Slowdowns** | Multi-agent DAG partitioning strips reasoning, logic, client code, and verification into parallel branches. |
-| **Telemetry & Privacy Concerns** | Privacy-first architecture: strictly zero logging of prompt payloads, tokens, or completions by default. |
-| **Runaway Provider Invoices** | Virtual model tiers, project-level spend velocity caps, and deterministic quota tracking. |
-| **Provider Vendor Lock-In** | 100% Drop-in replacement for OpenAI SDKs (`openai.base_url = "http://gateway:8000/v1"`). |
+Traditional AI gateways act merely as passive reverse proxies that pass through raw API requests, fragile rate limits, and broken model outputs. **WRAP operates as an active, self-healing scheduling kernel:**
+
+| Dimension | Vanilla Reverse Proxy (LiteLLM, Portkey, Kong) | WRAP Autonomous AI Engine |
+| :--- | :--- | :--- |
+| **Free-Tier Limits** | ❌ Fails with `429 Rate Limit Exceeded` when quota hits | ✅ **Preemptive Quota Virtualizer**: Predicts limits and rotates encrypted key pools *before* 429 happens |
+| **Tool Call Errors** | ❌ Drops agent calls when models hallucinate XML/raw text | ✅ **Autonomous Stream Tool Healer**: Intercepts & repairs corrupted tool calls & JSON in-flight (<0.5ms) |
+| **Free Silicon Mesh** | ❌ Requires manual provider selection per request | ✅ **Unified Virtual Tiers**: Coalesces Groq, Cerebras, Gemini, Mistral into high-throughput free compute |
+| **Reasoning Latency** | ❌ Slow sequential generation (1 model processes everything) | ✅ **Autonomous DAG Striping**: Partitions tasks into parallel workstreams across specialized silicon |
+| **Agent Runaway Loops**| ❌ No recursion detection; results in infinite billing loops | ✅ **Circuit Breakers & Spend Velocity Caps**: Hard recursion safeguards & budget cutoffs |
+| **Data Privacy** | ⚠️ Often logs full prompt/response payloads to DBs | ✅ **Zero-Payload Storage**: Telemetry records only metrics (tokens, latency); zero prompt persistence |
+| **Client Integration** | ⚠️ Proprietary SDKs or complex wrapper configurations | ✅ **100% Drop-in OpenAI v1 Compatible**: Works instantly with Cursor, Windsurf, Aider, LangChain |
 
 ---
 
-## 🚀 Key Features
+## 🚀 Core Architectural Superpowers
 
-### 1. Autonomous Multi-Agent DAG Orchestration & Workstream Striping
-Rather than executing complex reasoning and code workloads sequentially, WRAP’s internal analyzer decomposes incoming tasks into an execution graph with 5 synchronized workstreams:
+### 1. 🛡️ In-Flight Stream Reconstruction & Autonomous Tool Healer
+Production agentic workflows (Cursor, Windsurf, Roo Code, Aider) frequently break because frontier and open-weight models occasionally emit hallucinated text actions (e.g., `[Action: search(query="...")]`), corrupted XML tags (`<tool_call>...`), or split JSON schemas across streaming chunks.
+* **Zero-Latency Wire Repair:** WRAP’s streaming kernel parses SSE chunks mid-flight. When an invalid tool-call syntax is detected, it auto-extracts the intended function arguments, repairs incomplete JSON brackets, and re-synthesizes a valid OpenAI-compatible `tool_calls` delta with `finish_reason: "tool_calls"`.
+* **Zero Client Dropouts:** Guarantees 100% tool-call execution reliability even on smaller, aggressive open models.
+
+```
+Incoming Model Stream ──► [WRAP Stream Interceptor] ──► Validated OpenAI Schema ──► Client Agent
+  {"arguments": "{\"id": 1        │ Detects truncated JSON /        {"function_call": {           (Cursor / Aider)
+  [BROKEN STREAM TERMINATION]      │ Hallucinated markdown tool      "arguments": "{\"id\": 1}"}}
+                                  ▼
+                     [Zero-Overhead Re-synthesizer (<0.5ms)]
+```
+
+---
+
+### 2. ⚡ Preemptive Quota Virtualization & Free-Tier Multiplexing
+Free-tier providers (Groq, Cerebras, Google Gemini Flash, Mistral, SambaNova) offer frontier speeds (up to 2,000+ tokens/sec) but enforce strict request-per-minute (RPM) and token-per-minute (TPM) caps.
+* **Proactive Load Leveling:** Rather than waiting for a provider to return an error `429`, WRAP tracks token velocities and rate-limit windows in real time.
+* **Autonomous Key Striping:** Multiplexes load across encrypted pools of free-tier keys, seamlessly rolling traffic to fresh credentials before provider quotas saturate.
+* **Enterprise High-Throughput for $0:** Empowers developers and startups to run sustained multi-agent coding workloads with commercial reliability at zero API compute cost.
+
+---
+
+### 3. 🎯 Autonomous Model Tiers & Dynamic Routing (`auto`)
+Eliminate brittle, hardcoded model strings in your applications. WRAP categorizes all connected models into high-level virtual tiers with autonomous Quality-of-Service (QoS) prioritization:
+
+* **`auto`**: Dynamically routes each prompt to the fastest, healthiest, and most cost-effective worker based on real-time latency and quota headroom.
+* **`fast-tier`**: Ultra-low Time-To-First-Token (TTFT) inference powered by Groq LPUs and Gemini Flash. Ideal for autocomplete, inline suggestions, and interactive chat.
+* **`reasoning-tier`**: High-complexity planning and synthesis powered by DeepSeek-R1, Gemini 2.5 Pro, and OpenAI o1/o3-mini.
+* **`coding-tier`**: Multi-step code generation and tool execution optimized models (Qwen 2.5 Coder, Sonnet 3.7, DeepSeek).
+* **`economy-tier`**: High-quota, zero-cost models designed for bulk summarization, extraction, and automated regression testing.
+* **`ensemble-consensus`**: High-speed primary draft generation verified concurrently by a secondary deep-reasoning model for mission-critical precision.
+
+---
+
+### 4. ⚡ Autonomous Multi-Agent DAG Orchestration
+Complex reasoning prompts are not meant to run in a sequential waterfall. WRAP’s internal DAG analyzer decomposes multi-faceted requests into up to 5 concurrent workstreams across specialized silicon:
 
 ```
 01 INGEST ──► 02 RESOLVER (DAG Partition) ──► [PARALLEL WORKSTREAMS] ──► 04 SYNTHESIZE ──► 05 VERDICT (200 OK)
@@ -102,32 +139,11 @@ Rather than executing complex reasoning and code workloads sequentially, WRAP’
 
 ---
 
-### 2. Autonomous Self-Healing AI Engine & Universal Tool Recovery
-Production LLM workflows frequently fail due to context load, provider dropouts, or models hallucinating tool calls as plain text or malformed JSON. WRAP's built-in self-healing kernel intercepts and repairs these issues dynamically:
-- **In-Flight Tool Call Healer:** When models output raw text actions (e.g. `[Action: tool_name(args)]` or unescaped code blocks) instead of native tool calls, WRAP automatically extracts parameters, reconstructs valid OpenAI `tool_calls` schemas, and sets `finish_reason: "tool_calls"`. This guarantees **0% tool-call failures** for agents (Cursor, Windsurf, Roo Code, Aider).
-- **Preemptive Quota & Key Multiplexing:** Detects approaching rate limits (429s) before they happen and routes requests to warm backup credentials without dropping the connection.
-- **Zero-Downtime Fallback Cascades:** If an upstream provider suffers an outage or high latency spike, WRAP cascades execution to equivalent healthy models with full context preservation in `< 5ms`.
-
----
-
-### 3. Real-Time Telemetry & Cost Analytics
-Inspect cluster-wide throughput, token velocities, and spend burn-down across all connected providers with high-resolution graphs.
-- **P50 / P95 / P99 Latency distributions** tracked per provider and virtual tier.
-- **Real-time token counter** tracking prompt vs. completion consumption across billable cycles.
-- **SSE streaming latency monitors** measuring time-to-first-token (TTFT) and token jitter.
-
-<!-- ANALYTICS SCREENSHOT -->
-<p align="center">
-  <img src="docs/assets/analytics-dashboard.png" alt="WRAP Real-time Telemetry & Cost Dashboard" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
-</p>
-
----
-
-### 4. Operator Security Enclave & Control Room
-Enterprise identity controls powered by Fernet AES-128-CBC encryption for provider secrets and master API access keys.
-- **Zero-knowledge vaulting:** Provider API keys are encrypted at rest with hardware/environment derived keys.
-- **Role-based admin access:** Instant revocation, credential rotation, and masked key inspection.
-- **Production-ready setup wizard:** 1-Click admin onboarding and gateway key rotation.
+### 5. 🔒 Zero-Payload Privacy & Cryptographic Enclave
+Built from the ground up for strict enterprise security compliance:
+* **Zero Payload Retention:** WRAP’s telemetry and persistence engines record only operational metrics (token count, duration, TTFT, model IDs, status codes). **Your prompts, messages, and model completions are NEVER written to disk, databases, or external loggers.**
+* **Hardware-Derived Key Encryption:** Provider secrets and keys are encrypted at rest using AES-128-CBC via Fernet cryptography with master key derivation.
+* **Role-Based Access Control (RBAC):** Built-in operator authentication console with instant API key revocation, masked key previews, and secure rotation wizards.
 
 <!-- LOGIN SCREENSHOT -->
 <p align="center">
@@ -136,23 +152,17 @@ Enterprise identity controls powered by Fernet AES-128-CBC encryption for provid
 
 ---
 
-### 5. Virtual Model Tiers & Spend Governance
-Route client requests to high-level virtual aliases with autonomous QoS prioritization, load balancing, and transparent failover:
-- `fast-tier`: Ultra-low TTFT and high-throughput streaming inference across Groq LPUs and Gemini Flash.
-- `reasoning-tier`: Deep reasoning, complex logic, and high benchmark capability (GPT-OSS-120B, Gemini 2.5 Pro, Deep Research).
-- `economy-tier`: Maximum quota headroom with lightweight token-efficient models ($0 compute cost).
-- `coding-tier`: Syntax, code-completion, and multi-step tool execution optimized models (Qwen, Sonnet, Gemini Flash).
-- `ensemble-consensus`: High-speed primary generation verified concurrently by a deep reasoning model for frontier accuracy.
-- `auto`: Automatically select the optimal healthy worker based on cost, latency, and current quota availability.
-- **Spend Governance & Guardrails:** Hardware-isolated recursion safeguards, budget circuit breakers, and rate-limit virtualizers eliminate runaway agent billing.
+### 6. 📊 Real-Time Observability & Spend Circuit Breakers
+Maintain complete visibility and governance over your AI infrastructure:
+* **Live Latency Percentiles:** Tracks P50, P95, and P99 response times per provider, model, and virtual tier.
+* **Token Velocity & Burn-Down:** Live SSE streaming meters measuring tokens per second, prompt vs. completion ratios, and historical cost allocations.
+* **Hardware Recursion Safeguards:** Prevents runaway agent loops from draining budgets through automated hop limits, depth clamps, and spend velocity circuit breakers.
+* **Dynamic Worker Health Matrix:** Continuous automated health probing every 60 seconds with exponential backoff quarantine for unstable upstream nodes.
 
----
-
-### 6. Dynamic Worker Topology & Health Matrix
-Every provider credential spins up an isolated worker node within WRAP’s internal scheduling grid:
-- **Least-Recently-Used (LRU) with QoS weighting:** Prevents rate-limit throttling by distributing calls evenly across valid accounts.
-- **Exponential circuit breakers:** Workers experiencing 429s or 5xx errors are quarantined and reintroduced progressively.
-- **Real-time health probes:** Automated background testing of provider credentials every 60 seconds.
+<!-- ANALYTICS SCREENSHOT -->
+<p align="center">
+  <img src="docs/assets/analytics-dashboard.png" alt="WRAP Real-time Telemetry & Cost Dashboard" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
+</p>
 
 <!-- WORKER TOPOLOGY VISUAL -->
 <p align="center">
