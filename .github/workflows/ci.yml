@@ -29,6 +29,10 @@ jobs:
       - name: Run fast unit tests
         env:
           PYTHONPATH: .
+          DATABASE_URL: sqlite+aiosqlite:///:memory:
+          ENVIRONMENT: test
+          WRAP_MASTER_KEY: test_master_key_minimum_32_characters_long_12345
+          WRAP_API_KEYS: wrap_test_api_key_minimum_16_chars_12345
         run: |
           cd backend
           pytest tests/test_config.py tests/test_intelligence.py tests/test_stream_tool_healer.py -v
