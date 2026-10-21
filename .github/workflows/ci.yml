@@ -27,6 +27,8 @@ jobs:
           pip install -r backend/requirements.txt
 
       - name: Run fast unit tests
+        env:
+          PYTHONPATH: .
         run: |
           cd backend
           pytest tests/test_config.py tests/test_intelligence.py tests/test_stream_tool_healer.py -v
