@@ -146,18 +146,26 @@ Enterprise identity controls powered by Fernet AES-128-CBC encryption for provid
 
 ---
 
-### 5. Virtual Model Tiers & Spend Governance
-Organize dozens of upstream models into cohesive, policy-driven virtual endpoints:
+### 5. Virtual Model Tiers & Multi-Provider Cascades
+Route client requests to high-level virtual aliases with autonomous QoS prioritization, load balancing, and transparent failover:
+- `fast-tier`: Ultra-low TTFT and high-throughput streaming inference across Groq LPUs and Gemini Flash.
+- `reasoning-tier`: Deep reasoning, complex logic, and high benchmark capability (GPT-OSS-120B, Gemini 2.5 Pro, Deep Research).
+- `economy-tier`: Maximum quota headroom with lightweight token-efficient models ($0 compute cost).
+- `coding-tier`: Syntax, code-completion, and multi-step tool execution optimized models (Qwen, Sonnet, Gemini Flash).
+- `ensemble-consensus`: High-speed primary generation verified concurrently by a deep reasoning model for frontier accuracy.
 - `auto`: Automatically select the optimal healthy worker based on cost, latency, and current quota availability.
-- `tier-deep-reasoning`: High-intelligence models for complex architectural design and mathematical analysis.
-- `tier-fast-code`: Ultra-low latency inference engines tailored for autocomplete and real-time generation.
-- **Budget Guardrails:** Set per-key daily, weekly, or monthly soft-warnings and hard-stops.
+- **Spend Governance & Guardrails:** Hardware-isolated recursion safeguards, budget circuit breakers, and rate-limit virtualizers eliminate runaway agent billing.
 
-<!-- MODEL TIERS & BUDGETS PLACEHOLDER -->
+<!-- MODEL TIERS & BUDGETS VISUALS -->
 <p align="center">
-  <img src="docs/assets/model-tiers-budgets.png" alt="Virtual Model Tiers and Spend Budgets" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
+  <img src="docs/assets/model-tiers-budgets.png" alt="Autonomous Virtual Model Tiers & Priority Cascades" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
-<p align="center"><em>Figure 5: Policy configuration — Virtual tier routing, budget allocations, and model capability routing.</em></p>
+<p align="center"><em>Figure 5a: Autonomous Virtual Tiers — Fast LPU Tier (36 workers online) and Frontier Reasoning Tier (15 workers online) with dynamic multi-provider fallback cascades.</em></p>
+
+<p align="center">
+  <img src="docs/assets/model-tiers-cascades.png" alt="Economy, Code & Consensus Virtual Tiers" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
+</p>
+<p align="center"><em>Figure 5b: Autonomous Virtual Tiers — Economy Tier (37 workers online), Code Tier (12 workers online), and Dual-Model Consensus Tier (42 workers online).</em></p>
 
 ---
 
@@ -167,11 +175,11 @@ Every provider credential spins up an isolated worker node within WRAP’s inter
 - **Exponential circuit breakers:** Workers experiencing 429s or 5xx errors are quarantined and reintroduced progressively.
 - **Real-time health probes:** Automated background testing of provider credentials every 60 seconds.
 
-<!-- WORKER TOPOLOGY PLACEHOLDER -->
+<!-- WORKER TOPOLOGY VISUAL -->
 <p align="center">
   <img src="docs/assets/worker-topology.png" alt="Worker Topology & Live Health Matrix" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
-<p align="center"><em>Figure 6: Real-time worker grid displaying live state, concurrency, latency, and error tracking per worker node.</em></p>
+<p align="center"><em>Figure 6: Real-time computational worker grid displaying live state, concurrency, latency, and error tracking per worker node across 14 providers.</em></p>
 
 ---
 
@@ -179,16 +187,20 @@ Every provider credential spins up an isolated worker node within WRAP’s inter
 
 WRAP normalizes provider-specific protocols into the standard OpenAI v1 schema.
 
-| Provider | Model / Endpoint | `/v1/chat/completions` | Stream (SSE) | Tool Calling | Vision | Auto-Fallback | Free-Tier Striping |
+| Provider | Supported Models & Silicon | `/v1/chat/completions` | Stream (SSE) | Tool Calling | Vision | Auto-Fallback | Free-Tier Striping |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Groq LPU** | `llama-3.3-70b-versatile`, `mixtral-8x7b-32768` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Cerebras** | `llama3.1-8b`, `llama3.1-70b` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| **Google Gemini** | `gemini-1.5-pro`, `gemini-2.0-flash` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **OpenAI** | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Anthropic** | `claude-3-7-sonnet`, `claude-3-5-haiku` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **DeepSeek** | `deepseek-chat`, `deepseek-reasoner` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| **Google Gemini** | `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-3.1-flash-lite`, `deep-research` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Groq LPU** | `llama-3.3-70b-versatile`, `qwen/qwen3.8-27b`, `mixtral-8x7b` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Cerebras** | `llama3.3-70b`, `llama3.1-8b` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| **OpenAI** | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini`, `openai/gpt-oss-120b` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Anthropic** | `claude-3-7-sonnet`, `claude-3-5-haiku`, `claude-3-opus` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **DeepSeek** | `deepseek-chat`, `deepseek-reasoner`, `deepseek-r1` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
 | **Ollama / Local** | `llama3`, `deepseek-r1`, `qwen2.5-coder` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Mistral AI** | `mistral-large`, `codestral` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| **Mistral AI** | `mistral-large`, `codestral`, `open-mistral` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| **Together AI** | `meta-llama/Llama-3-70b`, `deepseek-ai/DeepSeek-V3` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| **SambaNova** | `Meta-Llama-3.1-405B-Instruct`, `Llama-3.1-70B` | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| **Perplexity** | `sonar-pro`, `sonar-reasoning` | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
+| **xAI** | `grok-2`, `grok-2-mini` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ---
 
@@ -202,7 +214,7 @@ The quickest way to launch WRAP along with PostgreSQL 16, backend API, and React
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/wrap.git
+git clone https://github.com/ajayraj30002/wrap.git
 cd wrap
 
 # 2. Configure master key & database credentials
@@ -328,7 +340,7 @@ const wrap = new OpenAI({
 
 async function run() {
   const stream = await wrap.chat.completions.create({
-    model: "tier-fast-code",
+    model: "fast-tier", // or "coding-tier", "reasoning-tier", "auto"
     messages: [{ role: "user", content: "Write a debounce function in TypeScript." }],
     stream: true,
   });
