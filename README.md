@@ -8,12 +8,12 @@
 <h1 align="center">WRAP</h1>
 
 <p align="center">
-  <strong>Enterprise Multi-Agent AI Gateway & Dynamic DAG Orchestration Engine</strong><br />
-  <em>Wrapping Free & Enterprise Model Tiers into an Ultimate High-Throughput Challenger.</em>
+  <strong>Self-Healing AI Gateway & Autonomous Multi-Agent DAG Orchestration Engine</strong><br />
+  <em>Unifying Free & Enterprise Model Tiers into an Unstoppable, High-Throughput Compute Mesh.</em>
 </p>
 
 <p align="center">
-  <a href="https://github.com/your-org/wrap/actions"><img src="https://img.shields.io/badge/CI-passing-22c55e?style=for-the-badge&logo=githubactions&logoColor=white" alt="CI Status" /></a>
+  <a href="https://github.com/ajayraj30002/wrap/actions"><img src="https://img.shields.io/badge/CI-passing-22c55e?style=for-the-badge&logo=githubactions&logoColor=white" alt="CI Status" /></a>
   <a href="https://hub.docker.com"><img src="https://img.shields.io/badge/Docker-Ready-2563eb?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Ready" /></a>
   <a href="https://kubernetes.io"><img src="https://img.shields.io/badge/Kubernetes-Kustomize-326ce5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes" /></a>
   <a href="#supported-providers"><img src="https://img.shields.io/badge/OpenAI-Drop--in%20v1-7c3aed?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Compatible" /></a>
@@ -21,14 +21,14 @@
 </p>
 
 <p align="center">
+  <a href="#-about-wrap"><strong>About</strong></a> •
   <a href="#-quickstart"><strong>Quickstart</strong></a> •
   <a href="#-key-features"><strong>Key Features</strong></a> •
   <a href="#-autonomous-dag-orchestration"><strong>DAG Engine</strong></a> •
-  <a href="#-supported-providers"><strong>Supported Providers</strong></a> •
+  <a href="#-supported-providers"><strong>Providers</strong></a> •
   <a href="#-enterprise-architecture"><strong>Architecture</strong></a> •
   <a href="#-client-sdk-usage"><strong>SDK Integration</strong></a> •
-  <a href="#-deployment-modes"><strong>Deployment</strong></a> •
-  <a href="#-documentation"><strong>Docs</strong></a>
+  <a href="#-deployment-modes"><strong>Deployment</strong></a>
 </p>
 
 <p align="center">
@@ -49,25 +49,28 @@
 
 ---
 
-## ⚡ What is WRAP?
+## ⚡ About WRAP
 
-**WRAP** (*Wrapping Free Tiers into an Ultimate Challenger*) is an enterprise-grade, high-throughput AI Gateway and Autonomous DAG Orchestration proxy. It delivers a unified, zero-overhead **OpenAI-compatible drop-in endpoint** (`/v1/chat/completions`) that aggregates distributed LLM providers, balances encrypted credential pools, and strips multi-agent workloads into parallel execution graphs.
+**WRAP** (*Wrapping Free Tiers into an Ultimate Challenger*) is an enterprise-grade, high-throughput AI Gateway and Autonomous DAG Orchestration proxy built for mission-critical AI applications, autonomous agents, and developer toolchains. It exposes a single, zero-overhead **OpenAI-compatible drop-in endpoint** (`/v1/chat/completions`) that aggregates distributed LLM providers, balances encrypted credential pools, and strips multi-agent workloads into parallel execution graphs.
 
-Traditional AI gateways simply round-robin raw API requests. **WRAP operates as an intelligent scheduling kernel:**
-- **Decomposes complex requests** into multi-branch Directed Acyclic Graphs (DAGs) across specialized provider clusters (e.g., Deep Reasoning on Gemini Pro, Code Generation on Groq LPU).
-- **Enforces strict zero-leak privacy:** telemetry tracks operational metadata, token velocity, and latencies without ever persisting prompts or sensitive model payloads.
-- **Eliminates single points of failure** with real-time health probes, automatic fallback cascades, and quota window decay.
+Traditional AI gateways act merely as passive reverse proxies that pass through raw API requests, fragile rate limits, and broken model outputs. **WRAP operates as an active, self-healing scheduling kernel:**
+
+- **🛡️ Autonomous Self-Healing AI Engine:** Transparently intercepts provider errors (429 rate limits, 5xx outages, context window overflow, and hallucinated tool calls) and heals them in-flight without interrupting the client.
+- **⚡ Dynamic Multi-Agent DAG Orchestration:** Decomposes complex reasoning prompts into concurrent execution workstreams across specialized silicon (e.g., Deep Reasoning on Gemini, Ultra-fast Code on Groq LPUs, Instant Verification on Cerebras), collapsing sequential waterfalls into a single critical path.
+- **🔄 Free-Tier Arbitrage & Virtual Key Pools:** Seamlessly rotates paired free-tier credential buckets into unified, enterprise-grade virtual tiers with zero compute costs.
+- **🔒 Strict Zero-Leak Privacy:** Telemetry tracks operational metadata, token velocity, and latencies without ever logging or persisting user prompt payloads or sensitive completions.
+- **📊 Virtual Model Tiers & Spend Governance:** Hardware-isolated recursion safeguards, budget circuit breakers, and rate-limit virtualizers eliminate runaway agent loop billing.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                                  WRAP AI GATEWAY KERNEL                                │
 │                                                                                        │
-│  [Any OpenAI SDK] ──► [Auth & Guardrails] ──► [DAG Analyzer] ──► [Adaptive Scheduler]  │
-│                                                                          │             │
-│            ┌─────────────────────────────┬───────────────────────────────┴────────┐    │
-│            ▼                             ▼                                        ▼    │
-│    [Groq LPU Engine]            [Cerebras Speed Tier]                   [Gemini Pro]   │
-│    500+ tok/s Code              Sub-200ms Synthetics                    Frontier Logic │
+│  [Any OpenAI SDK] ──► [Auth & Guardrails] ──► [Self-Healing Engine] ──► [DAG Analyzer] │
+│                                                                                │       │
+│            ┌─────────────────────────────┬─────────────────────────────────────┴───┐   │
+│            ▼                             ▼                                         ▼   │
+│    [Groq LPU Engine]            [Cerebras Speed Tier]                    [Gemini Pro]  │
+│    500+ tok/s Code              Sub-200ms Synthetics                     Frontier Logic│
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -79,6 +82,7 @@ Traditional AI gateways simply round-robin raw API requests. **WRAP operates as 
 | :--- | :--- |
 | **Aggressive Free-Tier Rate Limits** | Dynamic credential pooling & auto-striping distributes load across multiple encrypted keys seamlessly. |
 | **Provider Downtime & Outages** | Zero-downtime fallback cascades reroute failed requests across alternative models in `< 5ms`. |
+| **Malformed Tool Calls & JSON Errors** | **Self-Healing Engine** auto-extracts hallucinated text tools, fixes broken JSON schemas, and repairs streaming calls. |
 | **Heavy Reasoning Slowdowns** | Multi-agent DAG partitioning strips reasoning, logic, client code, and verification into parallel branches. |
 | **Telemetry & Privacy Concerns** | Privacy-first architecture: strictly zero logging of prompt payloads, tokens, or completions by default. |
 | **Runaway Provider Invoices** | Virtual model tiers, project-level spend velocity caps, and deterministic quota tracking. |
@@ -108,7 +112,15 @@ Rather than executing complex reasoning and code workloads sequentially, WRAP’
 
 ---
 
-### 2. Real-Time Telemetry & Cost Analytics
+### 2. Autonomous Self-Healing AI Engine & Universal Tool Recovery
+Production LLM workflows frequently fail due to context load, provider dropouts, or models hallucinating tool calls as plain text or malformed JSON. WRAP's built-in self-healing kernel intercepts and repairs these issues dynamically:
+- **In-Flight Tool Call Healer:** When models output raw text actions (e.g. `[Action: tool_name(args)]` or unescaped code blocks) instead of native tool calls, WRAP automatically extracts parameters, reconstructs valid OpenAI `tool_calls` schemas, and sets `finish_reason: "tool_calls"`. This guarantees **0% tool-call failures** for agents (Cursor, Windsurf, Roo Code, Aider).
+- **Preemptive Quota & Key Multiplexing:** Detects approaching rate limits (429s) before they happen and routes requests to warm backup credentials without dropping the connection.
+- **Zero-Downtime Fallback Cascades:** If an upstream provider suffers an outage or high latency spike, WRAP cascades execution to equivalent healthy models with full context preservation in `< 5ms`.
+
+---
+
+### 3. Real-Time Telemetry & Cost Analytics
 Inspect cluster-wide throughput, token velocities, and spend burn-down across all connected providers with high-resolution graphs.
 - **P50 / P95 / P99 Latency distributions** tracked per provider and virtual tier.
 - **Real-time token counter** tracking prompt vs. completion consumption across billable cycles.
@@ -122,7 +134,7 @@ Inspect cluster-wide throughput, token velocities, and spend burn-down across al
 
 ---
 
-### 3. Operator Security Enclave & Control Room
+### 4. Operator Security Enclave & Control Room
 Enterprise identity controls powered by Fernet AES-128-CBC encryption for provider secrets and master API access keys.
 - **Zero-knowledge vaulting:** Provider API keys are encrypted at rest with hardware/environment derived keys.
 - **Role-based admin access:** Instant revocation, credential rotation, and masked key inspection.
@@ -136,7 +148,7 @@ Enterprise identity controls powered by Fernet AES-128-CBC encryption for provid
 
 ---
 
-### 4. Virtual Model Tiers & Spend Governance
+### 5. Virtual Model Tiers & Spend Governance
 Organize dozens of upstream models into cohesive, policy-driven virtual endpoints:
 - `auto`: Automatically select the optimal healthy worker based on cost, latency, and current quota availability.
 - `tier-deep-reasoning`: High-intelligence models for complex architectural design and mathematical analysis.
@@ -151,7 +163,7 @@ Organize dozens of upstream models into cohesive, policy-driven virtual endpoint
 
 ---
 
-### 5. Dynamic Worker Topology & Health Matrix
+### 6. Dynamic Worker Topology & Health Matrix
 Every provider credential spins up an isolated worker node within WRAP’s internal scheduling grid:
 - **Least-Recently-Used (LRU) with QoS weighting:** Prevents rate-limit throttling by distributing calls evenly across valid accounts.
 - **Exponential circuit breakers:** Workers experiencing 429s or 5xx errors are quarantined and reintroduced progressively.
