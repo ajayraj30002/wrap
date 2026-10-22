@@ -14,9 +14,7 @@ Desktop.ini
 # IDEs and Editors
 # =========================
 .idea/
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
+.vscode/
 *.swp
 *.swo
 *~
