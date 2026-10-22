@@ -1,0 +1,37 @@
+# Git & VCS
+.git/
+.github/
+
+# IDE & Editor metadata
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# AI & Agents
+.agents/
+
+# Documentation & Assets
+docs/
+*.md
+LICENSE
+
+# Backend Local Files
+backend/venv/
+backend/.venv/
+backend/env/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/.env
+backend/tests/
+backend/*.db
+backend/*.sqlite*
+
+# Frontend Local Files
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+frontend/*.log

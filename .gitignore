@@ -9,6 +9,7 @@
 ehthumbs.db
 Thumbs.db
 Desktop.ini
+*Zone.Identifier
 
 # =========================
 # IDEs and Editors
@@ -38,19 +39,28 @@ env/
 .venv/
 ENV/
 
-# Pytest and coverage
+# Testing, type checking & linting caches
 .pytest_cache/
 .coverage
 htmlcov/
 .tox/
+.mypy_cache/
+.ruff_cache/
+
+# Package distributions
+*.egg-info/
+develop-eggs/
+*.egg
 
 # Local configuration & Secrets
-# NEVER commit the .env file containing real secrets!
+# NEVER commit files containing real secrets!
 .env
 .env.local
 .env.*.local
 *.pem
 *.key
+!.env.example
+!backend/.env.example
 
 # SQLite & Local Databases
 *.sqlite
@@ -75,6 +85,8 @@ node_modules/
 dist/
 dist-ssr/
 build/
+.eslintcache
+*.tsbuildinfo
 
 # Logs
 logs
@@ -90,4 +102,3 @@ lerna-debug.log*
 # =========================
 # Local docker-compose overrides
 docker-compose.override.yml
-

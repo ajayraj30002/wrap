@@ -60,7 +60,7 @@ Traditional AI gateways act merely as passive reverse proxies that pass through 
 
 <!-- AUTONOMOUS SELF-HEALING AI ENGINE -->
 <p align="center">
-  <img src="docs/assets/Autonomous%20Self-Healing%20AI%20Engine.png" alt="WRAP Autonomous Self-Healing AI Engine" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
+  <img src="docs/assets/autonomous-self-healing-engine.png" alt="WRAP Autonomous Self-Healing AI Engine" width="100%" style="border-radius: 8px; border: 1px solid #1e293b;" />
 </p>
 
 ---
