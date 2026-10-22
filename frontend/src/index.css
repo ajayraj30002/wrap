@@ -5701,6 +5701,484 @@ button {
   color: var(--text-tertiary);
 }
 
+/* ==========================================================================
+   LIVE STREAM FULL MISSION CONTROL PAGE (/live)
+   High-Fidelity Enterprise Telemetry, Tachometer Cards & Top-Grade Flow
+   ========================================================================== */
+
+.live-stream-page {
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1560px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.live-page-title-cluster {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.live-topbar-pulse {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  color: #10b981;
+}
+
+[data-theme="dark"] .live-topbar-pulse {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.live-topbar-pulse.idle-bar {
+  background: var(--bg-hover);
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.live-topbar-pulse .live-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.live-topbar-pulse.active-green .live-pulse-dot {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseGreen 1.5s infinite;
+}
+
+.live-pulse-text {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.live-trigger-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .live-trigger-action {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.live-trigger-action:hover:not(:disabled) {
+  background: #1e293b;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .live-trigger-action:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.28);
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   TACHOMETER & ENTERPRISE METRICS STRIP
+   ========================================================================== */
+.live-tachometer-strip {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 1200px) {
+  .live-tachometer-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .live-tachometer-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tachometer-hero-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+  box-shadow: var(--shadow-card);
+}
+
+.hero-tacho-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-flame-icon {
+  color: var(--text-tertiary);
+  transition: color 0.2s ease;
+}
+
+.hero-flame-icon.flame-on {
+  color: #f59e0b;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5));
+}
+
+.hero-tacho-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+}
+
+.hero-tacho-number {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.hero-tacho-number .number-display {
+  font-size: 40px;
+  font-weight: 800;
+  color: #f59e0b;
+  line-height: 1;
+}
+
+[data-theme="dark"] .hero-tacho-number .number-display {
+  color: #fbbf24;
+}
+
+.hero-tacho-number .unit-display {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.hero-tacho-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-hover);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.hero-tacho-bar .tacho-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-tacho-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
+}
+
+.hero-tacho-meta strong {
+  color: var(--text-primary);
+}
+
+.tachometer-sub-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.sub-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+}
+
+.sub-card-value {
+  font-size: 22px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+}
+
+.sub-card-value.emerald { color: #059669; }
+[data-theme="dark"] .sub-card-value.emerald { color: #34d399; }
+
+.sub-card-value.cyan { color: #0284c7; }
+[data-theme="dark"] .sub-card-value.cyan { color: #22d3ee; }
+
+.sub-card-value.amber { color: #d97706; }
+[data-theme="dark"] .sub-card-value.amber { color: #fbbf24; }
+
+.sub-card-caption {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* ==========================================================================
+   MAIN TOPOLOGY CANVAS CARD
+   ========================================================================== */
+.live-flow-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.live-flow-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.75rem;
+}
+
+.live-flow-card .card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.live-flow-card .card-header-icon {
+  color: var(--accent);
+}
+
+.live-flow-card .card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.live-page-pipeline-container {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pipeline-node-grid {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  overflow-x: auto;
+  padding: 0.75rem 0;
+}
+
+.pipeline-stage-box {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.15rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  flex: 1;
+  min-width: 180px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.pipeline-stage-box.passed {
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.04);
+}
+
+.pipeline-stage-box.active-glow {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.08);
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.3);
+}
+
+.pipeline-stage-box.glow-emerald {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.35);
+}
+
+.pipeline-stage-box.highlight-heal {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.4);
+}
+
+.stage-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stage-icon.cyan { background: rgba(6, 182, 212, 0.12); color: #0284c7; }
+[data-theme="dark"] .stage-icon.cyan { color: #06b6d4; }
+
+.stage-icon.amber { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+[data-theme="dark"] .stage-icon.amber { color: #f59e0b; }
+
+.stage-icon.emerald { background: rgba(16, 185, 129, 0.12); color: #059669; }
+[data-theme="dark"] .stage-icon.emerald { color: #10b981; }
+
+.stage-icon.blue { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+[data-theme="dark"] .stage-icon.blue { color: #3b82f6; }
+
+.stage-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stage-title {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.stage-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.stage-metric {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+.pipeline-connector-flow {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   SPLIT TABLES: IN-FLIGHT & HISTORY
+   ========================================================================== */
+.live-split-tables {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .live-split-tables {
+    grid-template-columns: 1fr;
+  }
+}
+
+.in-flight-table-card, .completed-table-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-card);
+}
+
+.in-flight-table-card .card-header, .completed-table-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+}
+
+.live-req-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.live-req-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+  transition: background 0.15s ease;
+}
+
+.live-req-row:hover {
+  background: var(--bg-hover);
+}
+
+.live-req-row:last-child {
+  border-bottom: none;
+}
+
+.req-id-mono {
+  font-size: 11px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.req-model-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.req-tokens-mono, .req-latency-mono {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.stage-badge-small {
+  font-size: 9px;
+  padding: 2px 6px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+}
+
+.empty-state-live {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+
 
 
 
