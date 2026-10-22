@@ -5763,36 +5763,72 @@ button {
   letter-spacing: 0.04em;
 }
 
-.live-trigger-action {
+.live-header-diagnostics {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 8px 16px;
-  background: #0f172a;
-  color: #ffffff;
+  flex-wrap: wrap;
+}
+
+.diag-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-default);
-  cursor: pointer;
-  transition: all 0.2s ease;
+  padding: 4px 10px;
+  font-size: 11px;
 }
 
-[data-theme="dark"] .live-trigger-action {
-  background: rgba(16, 185, 129, 0.16);
-  border-color: rgba(16, 185, 129, 0.4);
-  color: #34d399;
+.diag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
 }
 
-.live-trigger-action:hover:not(:disabled) {
-  background: #1e293b;
-  transform: translateY(-1px);
+.diag-label {
+  color: var(--text-tertiary);
+  font-size: 10px;
 }
 
-[data-theme="dark"] .live-trigger-action:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.28);
-  border-color: #10b981;
-  color: #ffffff;
+.diag-val {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Standby Socket Diagnostic Cluster */
+.standby-socket-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.socket-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.socket-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 5px #10b981;
+  animation: pulseGreen 1.6s infinite;
 }
 
 /* ==========================================================================

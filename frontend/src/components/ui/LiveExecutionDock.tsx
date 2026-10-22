@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Zap,
   Layers,
@@ -7,17 +7,14 @@ import {
   PanelBottom,
   Minus,
   X,
-  Play,
   Lock,
   Flame,
   Radio,
   GitFork,
-  RotateCw,
   Radar,
   CheckCircle2,
 } from "lucide-react";
 import { useLiveDock } from "../../contexts/LiveDockContext";
-import { apiClient } from "../../lib/apiClient";
 import { formatShortRequestId } from "../../lib/providerBadges";
 
 export interface ActiveExecutionRequest {
@@ -57,7 +54,6 @@ export function LiveExecutionDock() {
   const [peakTokS, setPeakTokS] = useState<number>(0);
   const [sessionValueSaved, setSessionValueSaved] = useState<number>(0);
   const [velocityHistory, setVelocityHistory] = useState<number[]>([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-  const [simulating, setSimulating] = useState<boolean>(false);
   const [lastHealedEvent, setLastHealedEvent] = useState<{
     toolName: string;
     healType: string;
@@ -85,7 +81,7 @@ export function LiveExecutionDock() {
     return () => {
       if (velocityTickerRef.current) clearInterval(velocityTickerRef.current);
     };
-  }, [activeRequests.length, currentTokS, setCurrentTokS]);
+  }, [activeRequests.length, currentTokS]);
 
   // Connect to SSE stream
   useEffect(() => {
@@ -221,135 +217,11 @@ export function LiveExecutionDock() {
     };
   }, [peakTokS]);
 
-  // Trigger Enterprise Demo Burst (real-time velocity increase, peak, tool-heal, and smooth drop to zero)
-  const triggerEnterpriseDemo = useCallback(async () => {
-    if (simulating) return;
-    setSimulating(true);
-
-    const syntheticId = `req_${Math.random().toString(36).substring(2, 9)}`;
-    setSelectedRequestId(syntheticId);
-
-    const newReq: ActiveExecutionRequest = {
-      request_id: syntheticId,
-      model: "llama-3.3-70b-versatile",
-      provider: "groq",
-      tier: "ultra-speed",
-      is_hedged: true,
-      stage: "INGRESS_VERIFIED",
-      active_step: 1,
-      status: "STREAMING",
-      started_at: Date.now() / 1000,
-      output_tokens: 0,
-      input_tokens: 1420,
-      current_tok_s: 145.0,
-      ttft_ms: 68.2,
-      tool_calls_healed: 0,
-      zdr_verified: true,
-      hash_sha256: `sha256_${syntheticId.substring(4)}89e1`,
-    };
-
-    setActiveRequests([newReq]);
-    setCurrentTokS(145.0);
-    setPeakTokS((p) => Math.max(p, 145.0));
-
-    // Call backend API for live stream broadcast
-    try {
-      apiClient.post("/api/telemetry/simulate-flow", {
-        scenario: "hft_matching_engine",
-        model: "llama-3.3-70b-versatile",
-        provider: "groq",
-      }).catch(() => {});
-    } catch {
-      // best-effort
-    }
-
-    // Step 2: Virtual Kernel & Resolver (120ms)
-    setTimeout(() => {
-      setActiveRequests((prev) =>
-        prev.map((r) =>
-          r.request_id === syntheticId
-            ? { ...r, stage: "RESOLVER_DISPATCH", active_step: 2, current_tok_s: 310.5, output_tokens: 45 }
-            : r
-        )
-      );
-      setCurrentTokS(310.5);
-    }, 120);
-
-    // Step 3: Groq LPU Array Peak Burst (280ms)
-    setTimeout(() => {
-      setActiveRequests((prev) =>
-        prev.map((r) =>
-          r.request_id === syntheticId
-            ? { ...r, stage: "STREAMING_LPU", active_step: 3, current_tok_s: 485.4, output_tokens: 280 }
-            : r
-        )
-      );
-      setCurrentTokS(485.4);
-      setPeakTokS((p) => Math.max(p, 485.4));
-    }, 280);
-
-    // Step 4: Universal Tool Call Healer repair (550ms)
-    setTimeout(() => {
-      setActiveRequests((prev) =>
-        prev.map((r) =>
-          r.request_id === syntheticId
-            ? {
-                ...r,
-                stage: "TOOL_HEALED",
-                active_step: 4,
-                current_tok_s: 472.0,
-                output_tokens: 430,
-                tool_calls_healed: 1,
-              }
-            : r
-        )
-      );
-      setLastHealedEvent({
-        toolName: "verify_market_depth",
-        healType: "AST_SCHEMA_REPAIRED_0MS",
-        time: "Just now",
-      });
-      setCurrentTokS(472.0);
-    }, 550);
-
-    // Step 5: Egress Delivery (820ms)
-    setTimeout(() => {
-      setActiveRequests((prev) =>
-        prev.map((r) =>
-          r.request_id === syntheticId
-            ? { ...r, stage: "EGRESS_DELIVERED", active_step: 5, current_tok_s: 460.0, output_tokens: 610 }
-            : r
-        )
-      );
-      setCurrentTokS(460.0);
-    }, 820);
-
-    // Complete: Drop back to 0.0 tok/s and empty active list (1150ms)
-    setTimeout(() => {
-      setActiveRequests([]);
-      setCurrentTokS(0.0);
-      setSessionValueSaved((s) => Number((s + 0.0438).toFixed(4)));
-      setRecentCompleted((prev) => [
-        {
-          ...newReq,
-          status: "COMPLETED",
-          stage: "EGRESS_DELIVERED",
-          active_step: 5,
-          output_tokens: 610,
-          latency_ms: 812.4,
-          value_saved_usd: 0.0438,
-        },
-        ...prev.slice(0, 9),
-      ]);
-      setSimulating(false);
-    }, 1150);
-  }, [simulating, setCurrentTokS, setPeakTokS]);
-
   if (dockPosition === "closed") {
     return null;
   }
 
-  // Floating Minimized Pill
+  // Floating Minimized Speedometer Pill
   if (dockPosition === "minimized") {
     return (
       <div
@@ -413,19 +285,6 @@ export function LiveExecutionDock() {
 
         {/* Header Action Controls */}
         <div className="live-window-actions">
-          <button
-            type="button"
-            className="live-sim-btn"
-            onClick={triggerEnterpriseDemo}
-            disabled={simulating}
-            title="Fire instantaneous 485 tok/s live execution demo"
-          >
-            {simulating ? <RotateCw size={11} className="spin-icon" /> : <Play size={11} />}
-            <span>{simulating ? "BURSTING..." : "DEMO BURST"}</span>
-          </button>
-
-          <div className="live-header-divider" />
-
           {/* Position Toggles */}
           <button
             type="button"
@@ -602,15 +461,11 @@ export function LiveExecutionDock() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                className="btn-trigger-inline font-mono"
-                onClick={triggerEnterpriseDemo}
-                disabled={simulating}
-              >
-                <Play size={12} />
-                <span>TRIGGER DEMO BURST (485 TOK/S)</span>
-              </button>
+              <div className="standby-socket-cluster font-mono">
+                <div className="socket-pill"><span className="socket-dot" /> SSE READY</div>
+                <div className="socket-pill">:8000/v1</div>
+                <div className="socket-pill">&lt;0.8ms WIRE</div>
+              </div>
             </div>
           )}
         </div>
@@ -635,7 +490,7 @@ export function LiveExecutionDock() {
           <div className="telemetry-panel speed-gauge-panel">
             <div className="panel-micro-header font-mono">
               <span className="panel-tag">VELOCITY NEEDLE</span>
-              <span className="panel-status-val">{hasActiveRequest ? "485 LPU ACTIVE" : "0.0 IDLE"}</span>
+              <span className="panel-status-val">{hasActiveRequest ? "LPU ACTIVE" : "0.0 IDLE"}</span>
             </div>
 
             <div className="gauge-viewport">
@@ -652,7 +507,7 @@ export function LiveExecutionDock() {
                 <path
                   d="M 20 80 A 60 60 0 0 1 140 80"
                   fill="none"
-                  stroke="url(#gauge-gradient)"
+                  stroke="url(#gauge-gradient-dock)"
                   strokeWidth="8"
                   strokeLinecap="round"
                   strokeDasharray="188.5"
@@ -665,7 +520,7 @@ export function LiveExecutionDock() {
                   <circle cx="80" cy="80" r="4" fill="#fbbf24" />
                 </g>
                 <defs>
-                  <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient id="gauge-gradient-dock" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#10b981" />
                     <stop offset="60%" stopColor="#f59e0b" />
                     <stop offset="100%" stopColor="#ef4444" />
@@ -700,14 +555,14 @@ export function LiveExecutionDock() {
             {/* Metric Row 1: Session Arbitrage Value */}
             <div className="telemetry-metric-tile">
               <div className="tile-label font-mono">
-                <span>COMMERCIAL COST SAVED</span>
+                <span>COMMERCIAL VALUE ARBITRAGE</span>
                 <span className="tile-chip text-success">100% FREE</span>
               </div>
               <div className="tile-value-group">
                 <span className="tile-number emerald font-mono">
                   +${sessionValueSaved.toFixed(4)}
                 </span>
-                <span className="tile-caption">vs GPT-4o / Claude 3.5</span>
+                <span className="tile-caption">Autonomous Provider Delta</span>
               </div>
             </div>
 
@@ -735,13 +590,13 @@ export function LiveExecutionDock() {
                 <span className="tile-number mono-small font-mono">
                   {hasActiveRequest ? "18.2 KB RAM · 0 B DISK" : "0 B RAM · 0 B DISK"}
                 </span>
-                <span className="tile-caption">SHA-256 payload verified</span>
+                <span className="tile-caption">Strict Airgap Guarantee</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Recently Completed Execution History (Collapsible / Compact) */}
+        {/* Recently Completed Execution History (Compact) */}
         {recentCompleted.length > 0 && (
           <div className="live-history-bar">
             <span className="history-bar-title font-mono">

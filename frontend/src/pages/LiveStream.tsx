@@ -6,14 +6,11 @@ import {
   Layers,
   ShieldCheck,
   Server,
-  Play,
-  RotateCw,
   Lock,
   ArrowRight,
   Flame,
   Radar,
 } from "lucide-react";
-import { apiClient } from "../lib/apiClient";
 import { formatShortRequestId } from "../lib/providerBadges";
 
 export function LiveStream() {
@@ -23,7 +20,6 @@ export function LiveStream() {
   const [peakTokS, setPeakTokS] = useState<number>(0.0);
   const [totalTokens, setTotalTokens] = useState<number>(0);
   const [sessionValueSaved, setSessionValueSaved] = useState<number>(0.0);
-  const [simulating, setSimulating] = useState<boolean>(false);
   const [selectedReqId, setSelectedReqId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,13 +31,15 @@ export function LiveStream() {
           const snap = JSON.parse(e.data);
           if (snap.active_requests && snap.active_requests.length > 0) {
             setActiveRequests(snap.active_requests);
-            setCurrentTokS(snap.current_tok_s || 0);
-            if (snap.current_tok_s > peakTokS) setPeakTokS(snap.current_tok_s);
+            const v = snap.current_tok_s || 0;
+            setCurrentTokS(v);
+            if (v > peakTokS) setPeakTokS(v);
           } else {
             setActiveRequests([]);
             setCurrentTokS(0.0);
           }
           if (snap.recent_history) setRecentCompleted(snap.recent_history);
+          if (snap.total_streamed_tokens) setTotalTokens(snap.total_streamed_tokens);
         } catch {
           // ignore
         }
@@ -82,6 +80,9 @@ export function LiveStream() {
           if (c.value_saved_usd) {
             setSessionValueSaved((prev) => Number((prev + c.value_saved_usd).toFixed(4)));
           }
+          if (c.total_tokens) {
+            setTotalTokens((t) => t + c.total_tokens);
+          }
         } catch {
           // ignore
         }
@@ -91,6 +92,8 @@ export function LiveStream() {
           const data = JSON.parse(e.data);
           if (data.active_count === 0) {
             setCurrentTokS(0.0);
+          } else if (typeof data.current_tok_s === "number") {
+            setCurrentTokS(data.current_tok_s);
           }
         } catch {
           // ignore
@@ -105,87 +108,6 @@ export function LiveStream() {
     };
   }, [peakTokS]);
 
-  const triggerSimulation = async () => {
-    if (simulating) return;
-    setSimulating(true);
-
-    const syntheticId = `live_${Math.random().toString(36).substring(2, 9)}`;
-    setSelectedReqId(syntheticId);
-
-    const simReq = {
-      request_id: syntheticId,
-      model: "llama-3.3-70b-versatile",
-      provider: "groq",
-      tier: "ultra-speed",
-      stage: "INGRESS_VERIFIED",
-      status: "STREAMING",
-      output_tokens: 0,
-      current_tok_s: 140.0,
-      ttft_ms: 64.5,
-      tool_calls_healed: 0,
-    };
-
-    setActiveRequests([simReq]);
-    setCurrentTokS(140.0);
-    setPeakTokS((p) => Math.max(p, 140.0));
-
-    // Call backend API
-    try {
-      apiClient.post("/api/telemetry/simulate-flow", {
-        scenario: "hft_matching_engine",
-        model: "llama-3.3-70b-versatile",
-        provider: "groq",
-      }).catch(() => {});
-    } catch {
-      // Ignore
-    }
-
-    setTimeout(() => {
-      setActiveRequests((p) =>
-        p.map((r) => (r.request_id === syntheticId ? { ...r, stage: "STREAMING_CHUNKS", output_tokens: 180 } : r))
-      );
-      setCurrentTokS(320.0);
-      setTotalTokens((t) => t + 180);
-    }, 180);
-
-    setTimeout(() => {
-      setActiveRequests((p) =>
-        p.map((r) =>
-          r.request_id === syntheticId ? { ...r, stage: "TOOL_HEALED", output_tokens: 390, tool_calls_healed: 1 } : r
-        )
-      );
-      setCurrentTokS(488.2);
-      setPeakTokS((p) => Math.max(p, 488.2));
-      setTotalTokens((t) => t + 210);
-    }, 450);
-
-    setTimeout(() => {
-      setActiveRequests((p) =>
-        p.map((r) => (r.request_id === syntheticId ? { ...r, stage: "EGRESS_DELIVERED", output_tokens: 640 } : r))
-      );
-      setCurrentTokS(465.0);
-      setTotalTokens((t) => t + 250);
-    }, 780);
-
-    setTimeout(() => {
-      setActiveRequests([]);
-      setCurrentTokS(0.0);
-      setSessionValueSaved((s) => Number((s + 0.0485).toFixed(4)));
-      setRecentCompleted((p) => [
-        {
-          ...simReq,
-          status: "COMPLETED",
-          stage: "EGRESS_DELIVERED",
-          output_tokens: 640,
-          latency_ms: 780.0,
-          value_saved_usd: 0.0485,
-        },
-        ...p.slice(0, 19),
-      ]);
-      setSimulating(false);
-    }, 1100);
-  };
-
   const hasActiveRequest = activeRequests.length > 0;
   const currentReq = hasActiveRequest ? activeRequests[0] : null;
 
@@ -199,25 +121,30 @@ export function LiveStream() {
             <div className={`live-topbar-pulse ${hasActiveRequest ? "active-green" : "idle-bar"}`}>
               <span className="live-pulse-dot" />
               <span className="live-pulse-text font-mono">
-                {hasActiveRequest ? "STREAMING // ZERO OVERHEAD WIRE" : "STANDBY // LISTENING ON PORT 8000"}
+                {hasActiveRequest ? "ACTIVE EXECUTION // WIRE STREAMING" : "STANDBY // ZERO-LATENCY LISTENER"}
               </span>
             </div>
           </div>
           <p className="page-subtitle">
-            Real-time execution pipeline tracing, token velocity meters, and autonomous tool healing telemetry.
+            Authentic real-time execution flow, token velocity meters, and autonomous tool healing telemetry.
           </p>
         </div>
 
-        <div className="page-actions">
-          <button
-            type="button"
-            className="btn btn-primary live-trigger-action"
-            onClick={triggerSimulation}
-            disabled={simulating}
-          >
-            {simulating ? <RotateCw size={14} className="spin-icon" /> : <Play size={14} />}
-            <span>{simulating ? "BURSTING 485 TOK/S..." : "TRIGGER DEMO EXECUTION"}</span>
-          </button>
+        {/* Enterprise Diagnostics Cluster */}
+        <div className="live-header-diagnostics font-mono">
+          <div className="diag-chip">
+            <span className="diag-dot" />
+            <span className="diag-label">GATEWAY PORT:</span>
+            <span className="diag-val">:8000/v1</span>
+          </div>
+          <div className="diag-chip">
+            <span className="diag-label">INGRESS PROTOCOL:</span>
+            <span className="diag-val">HTTP/1.1 SSE</span>
+          </div>
+          <div className="diag-chip">
+            <span className="diag-label">WIRE LATENCY:</span>
+            <span className="diag-val text-success">&lt;0.8ms</span>
+          </div>
         </div>
       </div>
 
@@ -241,20 +168,20 @@ export function LiveStream() {
             />
           </div>
           <div className="hero-tacho-meta font-mono">
-            <span>Peak: <strong>{peakTokS > 0 ? `${peakTokS.toFixed(1)} tok/s` : "0.0 tok/s"}</strong></span>
-            <span>Streamed: <strong>{totalTokens.toLocaleString()} tokens</strong></span>
-            <span>Silicon: <strong>{hasActiveRequest ? "Groq LPU Array" : "Standby"}</strong></span>
+            <span>Peak Velocity: <strong>{peakTokS > 0 ? `${peakTokS.toFixed(1)} tok/s` : "0.0 tok/s"}</strong></span>
+            <span>Total Streamed: <strong>{totalTokens.toLocaleString()} tokens</strong></span>
+            <span>Active Silicon: <strong>{hasActiveRequest ? "Groq LPU Ultra-Throughput" : "Standby"}</strong></span>
           </div>
         </div>
 
         <div className="tachometer-sub-card">
-          <span className="sub-card-label">SESSION VALUE SAVED</span>
+          <span className="sub-card-label">SESSION VALUE GENERATED</span>
           <span className="sub-card-value emerald font-mono">+${sessionValueSaved.toFixed(4)}</span>
-          <span className="sub-card-caption">Zero billing vs Claude 3.5 Sonnet</span>
+          <span className="sub-card-caption">Commercial Provider Arbitrage</span>
         </div>
 
         <div className="tachometer-sub-card">
-          <span className="sub-card-label">ZERO DATA RETENTION</span>
+          <span className="sub-card-label">ZERO DATA RETENTION (ZDR)</span>
           <span className="sub-card-value cyan font-mono">
             <Lock size={16} /> {hasActiveRequest ? "18.2 KB RAM" : "0 B DISK"}
           </span>
@@ -264,7 +191,7 @@ export function LiveStream() {
         <div className="tachometer-sub-card">
           <span className="sub-card-label">UNIVERSAL TOOL HEALER</span>
           <span className="sub-card-value amber font-mono">
-            {hasActiveRequest ? "0ms OVERHEAD" : "READY"}
+            {hasActiveRequest ? "0ms SLA" : "ARMED"}
           </span>
           <span className="sub-card-caption">Autonomous schema repair active</span>
         </div>
@@ -363,7 +290,7 @@ export function LiveStream() {
               </div>
             </div>
           ) : (
-            /* Standby State */
+            /* Standby State: Enterprise Terminal Diagnostics */
             <div className="idle-standby-canvas fullpage">
               <div className="radar-reticle">
                 <div className="radar-circle circle-outer" />
@@ -379,19 +306,16 @@ export function LiveStream() {
                   <span className="standby-ready">GATEWAY STANDBY</span>
                 </div>
                 <div className="standby-subtitle">
-                  Wire listener active on <code>http://localhost:8000/v1</code> with 0ms overhead.
+                  Wire listener active on <code>http://localhost:8000/v1</code> with 0ms polling overhead.
                 </div>
               </div>
 
-              <button
-                type="button"
-                className="btn btn-primary font-mono"
-                onClick={triggerSimulation}
-                disabled={simulating}
-              >
-                <Play size={13} />
-                <span>TRIGGER DEMO BURST (485 TOK/S)</span>
-              </button>
+              <div className="standby-socket-cluster font-mono">
+                <div className="socket-pill"><span className="socket-dot" /> SSE LISTENER: READY</div>
+                <div className="socket-pill">BIND: 127.0.0.1:8000</div>
+                <div className="socket-pill">TRANSPORT: HTTP/1.1 STREAM</div>
+                <div className="socket-pill">AST GUARD: ARMED</div>
+              </div>
             </div>
           )}
         </div>
@@ -423,7 +347,7 @@ export function LiveStream() {
               </div>
             ) : (
               <div className="empty-state-live font-mono">
-                <span>0 active requests. Send a request through Cursor or click "TRIGGER DEMO EXECUTION" above.</span>
+                <span>0 active requests. Send a request from Cursor IDE to view real-time execution flow.</span>
               </div>
             )}
           </div>
