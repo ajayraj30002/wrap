@@ -14,6 +14,8 @@ import { Workers } from "./pages/Workers";
 import { Quota } from "./pages/Quota";
 import { Analytics } from "./pages/Analytics";
 import { Settings } from "./pages/Settings";
+import { LiveStream } from "./pages/LiveStream";
+import { LiveDockProvider } from "./contexts/LiveDockContext";
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated, needsSetup, isLoading } = useAuth();
@@ -32,6 +34,7 @@ function AppContent() {
       <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Overview />} />
+        <Route path="live" element={<LiveStream />} />
         <Route path="requests" element={<Requests />} />
         <Route path="workers" element={<Workers />} />
         <Route path="quota" element={<Quota />} />
@@ -55,9 +58,11 @@ export default function App() {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
+          <LiveDockProvider>
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </LiveDockProvider>
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>

@@ -21,6 +21,7 @@ export function Sidebar() {
 
   const primaryNav = [
     { to: "/dashboard", icon: <LayoutDashboard size={15} />, label: "Overview" },
+    { to: "/live", icon: <Zap size={15} />, label: "Live Stream" },
     { to: "/requests", icon: <Layers size={15} />, label: "Requests" },
     { to: "/workers", icon: <Server size={15} />, label: "Workers" },
     { to: "/quota", icon: <Database size={15} />, label: "Quota" },

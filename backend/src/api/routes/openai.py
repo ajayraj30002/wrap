@@ -313,6 +313,18 @@ async def create_chat_completion(
 
     estimated_token_mass = _estimate_token_mass(body.messages, body.tools)
 
+    try:
+        from src.services.live_telemetry import live_execution_tracker
+        asyncio.create_task(live_execution_tracker.start_request(
+            request_id=request_id,
+            model=body.model,
+            provider="groq" if ("groq" in body.model.lower() or "llama" in body.model.lower()) else "gemini",
+            tier="ultra-speed" if ("groq" in body.model.lower() or "llama" in body.model.lower()) else "reasoning-expert",
+            is_hedged=True,
+        ))
+    except Exception:
+        pass
+
     # Check Dual-Model Ensemble Consensus mode
     is_ensemble = (
         body.model.lower() in ("ensemble-consensus", "consensus", "ensemble", "dual-model", "frontier-consensus")
@@ -744,6 +756,17 @@ async def _finalize_stream_persistence(
                 async with AsyncSessionLocal() as session:
                     worker = await session.get(Worker, worker_id) if worker_id else None
                     gateway_key = await session.get(GatewayApiKey, gateway_key_id) if gateway_key_id else None
+
+                    try:
+                        from src.services.live_telemetry import live_execution_tracker
+                        asyncio.create_task(live_execution_tracker.complete_request(
+                            request_id=request_id,
+                            total_tokens=lifecycle.total_tokens or (lifecycle.output_tokens or 0),
+                            latency_ms=lifecycle.total_latency_ms or 0.0,
+                            status="COMPLETED" if lifecycle.status == "success" else "FAILED",
+                        ))
+                    except Exception:
+                        pass
 
                     if wf_run_id and event_logger:
                         succ = lifecycle.status == "success"

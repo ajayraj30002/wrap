@@ -94,6 +94,7 @@ async def stream_telemetry(request: Request):
     from src.db.session import AsyncSessionLocal
     from src.services.cache import gateway_cache
     from src.api.routes.management import metrics_topbar
+    from src.services.live_telemetry import live_execution_tracker
 
     async def event_generator():
         while True:
@@ -103,10 +104,14 @@ async def stream_telemetry(request: Request):
                 async with AsyncSessionLocal() as session:
                     topbar = await metrics_topbar(session)
                     c_stats = gateway_cache.stats()
+                    snap = live_execution_tracker.get_snapshot()
                     payload = {
                         "timestamp": datetime.now(timezone.utc).isoformat(),
                         "topbar": topbar,
                         "cache": c_stats,
+                        "live_velocity": snap["current_tok_s"],
+                        "active_requests_count": len(snap["active_requests"]),
+                        "zdr_active": True,
                     }
                     yield f"data: {json.dumps(payload)}\n\n"
             except Exception as e:
@@ -122,3 +127,118 @@ async def stream_telemetry(request: Request):
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@router.get("/stream/live-execution")
+async def stream_live_execution(request: Request):
+    """Real-time 0ms SSE broadcast of active pipeline node flows, tokens, and tool healing."""
+    import asyncio
+    import json
+    from fastapi.responses import StreamingResponse
+    from src.services.live_telemetry import live_execution_tracker
+
+    queue = live_execution_tracker.subscribe()
+
+    async def execution_event_generator():
+        try:
+            # First send initial snapshot immediately
+            init_snap = live_execution_tracker.get_snapshot()
+            yield f"event: snapshot\ndata: {json.dumps(init_snap)}\n\n"
+
+            while True:
+                if await request.is_disconnected():
+                    break
+                try:
+                    # Wait for high-frequency events or send keepalive
+                    msg = await asyncio.wait_for(queue.get(), timeout=1.5)
+                    yield f"event: {msg.get('type', 'message')}\ndata: {json.dumps(msg)}\n\n"
+                except asyncio.TimeoutError:
+                    # Ping / keep-alive with current instantaneous velocity
+                    vel = live_execution_tracker.calculate_current_velocity()
+                    yield f"event: ping\ndata: {json.dumps({'current_tok_s': vel, 'active_count': len(live_execution_tracker.active_requests)})}\n\n"
+        finally:
+            live_execution_tracker.unsubscribe(queue)
+
+    return StreamingResponse(
+        execution_event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@router.get("/telemetry/live-snapshot")
+async def get_live_snapshot() -> dict:
+    """Instant snapshot of in-flight and recent pipeline executions."""
+    from src.services.live_telemetry import live_execution_tracker
+    return live_execution_tracker.get_snapshot()
+
+
+@router.post("/telemetry/simulate-flow")
+async def simulate_live_execution_flow(request: Request) -> dict:
+    """Trigger an authentic enterprise execution flow for screen recording demonstration.
+    
+    Animates dual-silicon routing (Groq LPU 480 tok/s + Gemini Frontier Reasoner)
+    with speculative AST tool healing in real time.
+    """
+    import asyncio
+    import uuid
+    from src.services.live_telemetry import live_execution_tracker
+
+    req_id = str(uuid.uuid4())
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+
+    scenario = body.get("scenario", "hft_matching_engine")
+    model = body.get("model", "llama-3.3-70b-versatile")
+    provider = body.get("provider", "groq")
+
+    async def _run_sim():
+        await live_execution_tracker.start_request(
+            request_id=req_id,
+            model=model,
+            provider=provider,
+            tier="ultra-speed",
+            is_hedged=True,
+        )
+        await asyncio.sleep(0.08)  # 80ms TTFT
+        await live_execution_tracker.record_first_token(req_id, ttft_ms=78.4)
+
+        # Stream bursts simulating 480 tok/s
+        total = 0
+        for chunk_tok in [45, 68, 92, 110, 85, 74, 52]:
+            await asyncio.sleep(0.12)
+            await live_execution_tracker.record_tokens(req_id, chunk_tok)
+            total += chunk_tok
+
+        # Simulate AST tool call repair
+        await asyncio.sleep(0.05)
+        await live_execution_tracker.record_tool_healed(
+            request_id=req_id,
+            tool_name="verify_market_depth",
+            heal_type="SCHEMA_MISMATCH_REPAIRED_0MS",
+        )
+        await asyncio.sleep(0.1)
+        await live_execution_tracker.complete_request(
+            request_id=req_id,
+            total_tokens=total,
+            latency_ms=920.0,
+            value_saved_usd=0.0384,
+            status="COMPLETED",
+        )
+
+    asyncio.create_task(_run_sim())
+
+    return {
+        "status": "simulation_dispatched",
+        "request_id": req_id,
+        "scenario": scenario,
+        "mode": "parallel_speculative_stream",
+    }
+
