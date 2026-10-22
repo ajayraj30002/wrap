@@ -118,12 +118,6 @@ export function LiveStream() {
         <div className="page-title-group">
           <div className="live-page-title-cluster">
             <h1 className="page-title">Live Execution Mission Control</h1>
-            <div className={`live-topbar-pulse ${hasActiveRequest ? "active-green" : "idle-bar"}`}>
-              <span className="live-pulse-dot" />
-              <span className="live-pulse-text font-mono">
-                {hasActiveRequest ? "ACTIVE EXECUTION // WIRE STREAMING" : "STANDBY // ZERO-LATENCY LISTENER"}
-              </span>
-            </div>
           </div>
           <p className="page-subtitle">
             Authentic real-time execution flow, token velocity meters, and autonomous tool healing telemetry.
