@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { LogOut, Sun, Moon, Server, Cpu, Layers, Clock } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
-import { useLiveDock } from "../../contexts/LiveDockContext";
 import { apiClient } from "../../lib/apiClient";
 
 export function Topbar() {
@@ -113,11 +112,8 @@ export function Topbar() {
         </div>
       </div>
 
-      {/* Right: Live Dock Trigger, Version, Theme Switcher, Sign out */}
+      {/* Right: Version, Theme Switcher, Sign out */}
       <div className="topbar-right-cluster">
-        {/* Live Stream Dock Toggle Button */}
-        <TopbarLiveDockToggle />
-
         <div className="topbar-version-pill">
           <span>v1.4.2</span>
         </div>
@@ -147,88 +143,6 @@ export function Topbar() {
         </button>
       </div>
     </header>
-  );
-}
-
-function TopbarLiveDockToggle() {
-  const { dockPosition, openRight, openBottom, closeDock } = useLiveDock();
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const isActive = dockPosition === "right" || dockPosition === "bottom";
-
-  return (
-    <div className="topbar-live-container" style={{ position: "relative" }}>
-      <button
-        type="button"
-        className={`topbar-live-btn ${isActive ? "active" : ""}`}
-        onClick={() => {
-          if (isActive) closeDock();
-          else openRight();
-        }}
-        title="Toggle Live Real-Time Execution View (Right / Bottom)"
-      >
-        <span className="live-btn-pulse">
-          <span className="live-btn-ring" />
-          <span className="live-btn-core" />
-        </span>
-        <span className="live-btn-text">
-          {isActive ? `LIVE DOCK (${dockPosition.toUpperCase()})` : "LIVE VIEW"}
-        </span>
-      </button>
-
-      {/* Mini Options Trigger */}
-      <button
-        type="button"
-        className="topbar-live-options-trigger"
-        onClick={(e) => {
-          e.stopPropagation();
-          setMenuOpen((prev) => !prev);
-        }}
-        title="Choose dock position (Right / Bottom)"
-      >
-        ▾
-      </button>
-
-      {menuOpen && (
-        <div
-          className="topbar-live-dropdown"
-          onMouseLeave={() => setMenuOpen(false)}
-        >
-          <button
-            type="button"
-            className={`dropdown-item ${dockPosition === "right" ? "selected" : ""}`}
-            onClick={() => {
-              openRight();
-              setMenuOpen(false);
-            }}
-          >
-            Dock on Right (Split View)
-          </button>
-          <button
-            type="button"
-            className={`dropdown-item ${dockPosition === "bottom" ? "selected" : ""}`}
-            onClick={() => {
-              openBottom();
-              setMenuOpen(false);
-            }}
-          >
-            Dock on Bottom (Console)
-          </button>
-          {isActive && (
-            <button
-              type="button"
-              className="dropdown-item danger"
-              onClick={() => {
-                closeDock();
-                setMenuOpen(false);
-              }}
-            >
-              Close Live Dock
-            </button>
-          )}
-        </div>
-      )}
-    </div>
   );
 }
 
