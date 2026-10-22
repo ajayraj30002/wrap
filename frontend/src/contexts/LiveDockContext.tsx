@@ -9,10 +9,6 @@ interface LiveDockContextType {
   openBottom: () => void;
   closeDock: () => void;
   toggleDock: (preferredPos?: "right" | "bottom") => void;
-  currentTokS: number;
-  setCurrentTokS: (tokS: number) => void;
-  activeRequestsCount: number;
-  setActiveRequestsCount: (count: number) => void;
 }
 
 const LiveDockContext = createContext<LiveDockContextType | null>(null);
@@ -27,9 +23,6 @@ export function LiveDockProvider({ children }: { children: ReactNode }) {
     }
     return "closed";
   });
-
-  const [currentTokS, setCurrentTokS] = useState<number>(0);
-  const [activeRequestsCount, setActiveRequestsCount] = useState<number>(0);
 
   const setDockPosition = (pos: DockPosition) => {
     setDockPositionState(pos);
@@ -63,10 +56,6 @@ export function LiveDockProvider({ children }: { children: ReactNode }) {
         openBottom,
         closeDock,
         toggleDock,
-        currentTokS,
-        setCurrentTokS,
-        activeRequestsCount,
-        setActiveRequestsCount,
       }}
     >
       {children}

@@ -48,11 +48,9 @@ export function LiveExecutionDock() {
     closeDock,
     openRight,
     openBottom,
-    currentTokS,
-    setCurrentTokS,
-    setActiveRequestsCount,
   } = useLiveDock();
 
+  const [currentTokS, setCurrentTokS] = useState<number>(0.0);
   const [activeRequests, setActiveRequests] = useState<ActiveExecutionRequest[]>([]);
   const [recentCompleted, setRecentCompleted] = useState<ActiveExecutionRequest[]>([]);
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
@@ -101,13 +99,11 @@ export function LiveExecutionDock() {
           const snap = JSON.parse(e.data);
           if (snap.active_requests && snap.active_requests.length > 0) {
             setActiveRequests(snap.active_requests);
-            setActiveRequestsCount(snap.active_requests.length);
             const v = snap.current_tok_s || 0;
             setCurrentTokS(v);
             if (v > peakTokS) setPeakTokS(v);
           } else {
             setActiveRequests([]);
-            setActiveRequestsCount(0);
             setCurrentTokS(0);
           }
           if (snap.recent_history) {
@@ -223,12 +219,7 @@ export function LiveExecutionDock() {
         es.close();
       }
     };
-  }, [peakTokS, setActiveRequestsCount, setCurrentTokS]);
-
-  // Synchronize count
-  useEffect(() => {
-    setActiveRequestsCount(activeRequests.length);
-  }, [activeRequests.length, setActiveRequestsCount]);
+  }, [peakTokS]);
 
   // Trigger Enterprise Demo Burst (real-time velocity increase, peak, tool-heal, and smooth drop to zero)
   const triggerEnterpriseDemo = useCallback(async () => {
