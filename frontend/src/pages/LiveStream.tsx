@@ -167,10 +167,21 @@ export function LiveStream() {
               style={{ width: `${Math.min(100, (currentTokS / 600) * 100)}%` }}
             />
           </div>
-          <div className="hero-tacho-meta font-mono">
-            <span>Peak Velocity: <strong>{peakTokS > 0 ? `${peakTokS.toFixed(1)} tok/s` : "0.0 tok/s"}</strong></span>
-            <span>Total Streamed: <strong>{totalTokens.toLocaleString()} tokens</strong></span>
-            <span>Active Silicon: <strong>{hasActiveRequest ? "Groq LPU Ultra-Throughput" : "Standby"}</strong></span>
+          <div className="hero-tacho-stats-grid">
+            <div className="hero-stat-pill">
+              <span className="stat-pill-label">PEAK VELOCITY</span>
+              <span className="stat-pill-val font-mono">{peakTokS > 0 ? `${peakTokS.toFixed(1)} tok/s` : "0.0 tok/s"}</span>
+            </div>
+            <div className="hero-stat-pill">
+              <span className="stat-pill-label">TOTAL STREAMED</span>
+              <span className="stat-pill-val font-mono">{totalTokens.toLocaleString()} tokens</span>
+            </div>
+            <div className="hero-stat-pill">
+              <span className="stat-pill-label">ACTIVE SILICON</span>
+              <span className={`stat-pill-val font-mono ${hasActiveRequest ? "text-success" : ""}`}>
+                {hasActiveRequest ? "Groq LPU Array" : "Standby"}
+              </span>
+            </div>
           </div>
         </div>
 
